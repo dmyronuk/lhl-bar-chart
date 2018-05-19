@@ -1,3 +1,14 @@
+let createContainer = (element, width, height) => {
+  let container = $("<div></div");
+  container.css("width", width);
+  container.css("height", height);
+
+  container.addClass("chart-container");
+  let chartNum = $("#"+element).children(".chart-container").length;
+  container.attr("id", `chart-${chartNum}-container`);
+  $("#" + element).append(container);
+}
+
 let createTitle = (element, title, fontSize, fontColor) => {
   let titleDiv = $(`<div>${title}</div>`);
   titleDiv.css("fontSize", fontSize+"px");
@@ -32,5 +43,10 @@ let drawBarChart = (data, options, element) => {
 
 }
 
-createTitle("chart-container-a", "Some Graph", 35, "red");
-createChartInner("chart-container-a");
+createContainer("main-container", 700, 400)
+createTitle("chart-1-container", "Some Graph", 35, "red");
+createChartInner("chart-1-container");
+
+createContainer("main-container", 400, 600)
+createTitle("chart-2-container", "Some Graph", 35, "red");
+createChartInner("chart-2-container");
