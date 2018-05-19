@@ -1,6 +1,7 @@
 html, body {
   box-sizing:border-box;
   margin:0px;
+  font-family:Arial;
 }
 
 #top-bar{
@@ -8,7 +9,7 @@ html, body {
   padding:10px 0px 10px 0px;
   background:black;
   color:white;
-  font:25px Arial;
+  font-size:25px;
   display:flex;
   flex-direction:row;
   justify-content:center;
@@ -26,4 +27,14 @@ html, body {
   width:700px;
   background-color:blue;
   margin:20px 0px 20px 0px;
+}
+
+.chart-title{
+  background:cyan;
+  text-align:center;
+  padding:10px;
+}
+
+.chart-inner{
+  background:pink;
 }
