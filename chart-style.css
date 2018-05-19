@@ -37,4 +37,15 @@ html, body {
 
 .chart-inner{
   background:pink;
+  display:flex;
+  flex-direction:row;
+}
+
+.axes{
+  flex:1;
+  background:#dddddd;
+  margin:40px;
+  border-color:black;
+  border-left:black solid 2px;
+  border-bottom:black solid 2px;
 }

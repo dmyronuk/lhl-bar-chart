@@ -14,12 +14,19 @@ let createChartInner = (element) => {
   let height = container[0].clientHeight - titleDiv.clientHeight;
   let width = container[0].clientWidth;
 
+  //create container for axes below title
   let chartInner = $("<div></div");
   chartInner.addClass("chart-inner");
   chartInner.css("height", height);
   chartInner.css("width", width);
   container.append(chartInner);
+
+  //create axes
+  let axes = $("<div></div>");
+  axes.addClass("axes");
+  chartInner.append(axes)
 }
+
 
 let drawBarChart = (data, options, element) => {
 
