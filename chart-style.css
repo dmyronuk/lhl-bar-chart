@@ -41,6 +41,7 @@ html, body {
 
 .axes{
   flex:1;
+  position:relative;
   display:flex;
   align-items:flex-end;
   background:#dddddd;
@@ -50,4 +51,16 @@ html, body {
   border-bottom:black solid 2px;
 }
 
+.tick{
+  height:2px;
+  width:10px;
+  left:-10px;
+  background:black;
+  position:absolute;
+}
 
+.tick-label{
+  position:absolute;
+  font-size:10px;
+  left:-30px;
+}

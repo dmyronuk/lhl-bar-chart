@@ -29,16 +29,46 @@ let createChartInner = (element) => {
   let width = container[0].clientWidth;
 
   //create container for axes below title
-  let chartInner = $("<div></div");
-  chartInner.addClass("chart-inner");
+  let chartInner = $("<div/>").addClass("chart-inner");
   chartInner.css("height", height);
   chartInner.css("width", width);
   container.append(chartInner);
 
   //create axes
-  let axes = $("<div></div>");
-  axes.addClass("axes");
+  let axes = $("<div></div>").addClass("axes");
   chartInner.append(axes)
+}
+
+let createTicks = (axes, maxVal) => {
+  let height = axes.innerHeight();
+  let tickHeight = height/10;
+  for(let i = 1; i < 10; i++){
+    let curHeight = i * tickHeight;
+
+    let tickLabel = $("<div/>")
+    tickLabel.css("bottom", curHeight);
+    tickLabel.text = "label";
+    axes.append(tickLabel)
+
+    let tick = $("<div/>").addClass("tick");
+    tick.css("bottom", curHeight);
+    axes.append(tick);
+  }
+}
+
+let getMaxVal = (data, graphType) => {
+  if(graphType === "bar"){
+    return data.reduce((a,b) => a > b ? a:b);
+
+  }else if(graphType === "stacked"){
+    //To find the max y-Val we need to sum the values in each stacked array and then compute the max sum
+    let maxVal = data.reduce((a,b) => {
+      let sumB = b.reduce((total, cur) => total + cur);
+      if(a > sumB) return a;
+      else return sumB;
+      }, 0);
+    return maxVal;
+  }
 }
 
 //barWidth is fn of data.length, barHeight is fn of max(data)
@@ -50,6 +80,8 @@ let renderData = (graphType, element, data, barSpacing, barColor) => {
   let width = axes.innerWidth();
   let totalSpacerWidth = barSpacing * (data.length + 1);
   let barWidth = (width - totalSpacerWidth) / data.length;
+  let maxVal = getMaxVal(data, graphType);
+  createTicks(axes, maxVal);
 
   for(let i=0; i < data.length; i++){
     //curData will be an array if graph has stacked bars, else curData will be a single value (number) for regular bars
@@ -57,21 +89,14 @@ let renderData = (graphType, element, data, barSpacing, barColor) => {
     let curBar;
 
     if(graphType === "bar"){
-      let maxVal = data.reduce((a,b) => a > b ? a:b);
+      maxVal = data.reduce((a,b) => a > b ? a:b);
       let yVal = curData
       curBar = createBar(height, width, yVal, maxVal, barWidth, barSpacing, barColor);
 
     }else if(graphType === "stacked"){
 
-      //To find the max y-Val we need to sum the values in each stacked array and then compute the max sum
-      let maxVal = data.reduce((a,b) => {
-        let sumB = b.reduce((total, cur) => total + cur);
-        if(a > sumB) return a;
-        else return sumB;
-      }, 0);
       //container for stacked values
-      curBar = $("<div></div");
-      curBar.addClass("stacked-bar");
+      curBar = $("<div/>").addClass("stacked-bar");
 
       for(let j = 0; j < data.length; j++){
         let yVal = curData[j];
@@ -89,14 +114,13 @@ let renderData = (graphType, element, data, barSpacing, barColor) => {
 
 //height and width args refer to the axes - height is the max height of a bar
 let createBar = (height, width, value, maxVal, barWidth, barSpacing, barColor) => {
-  let bar = $("<div></div>");
+  let bar = $("<div/>").addClass("bar");
   let barHeight = height * value / maxVal;
 
   bar.css("margin-left", barSpacing);
   bar.css("width", barWidth);
   bar.css("height", barHeight);
   bar.css("background", barColor);
-  bar.addClass("bar");
   return bar;
 }
 
