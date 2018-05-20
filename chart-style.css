@@ -24,7 +24,7 @@ html, body {
 
 .chart-container{
   background-color:blue;
-  margin:20px 0px 20px 0px;
+  margin:30px 0px 0px 0px;
 }
 
 .chart-title{
@@ -50,6 +50,4 @@ html, body {
   border-bottom:black solid 2px;
 }
 
-.bar{
 
-}
