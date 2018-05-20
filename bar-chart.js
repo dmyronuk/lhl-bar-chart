@@ -2,17 +2,20 @@ let createContainer = (element, width, height) => {
   let container = $("<div></div");
   container.css("width", width);
   container.css("height", height);
-
   container.addClass("chart-container");
+
+  //Dynamically assign id
   let chartNum = $("#"+element).children(".chart-container").length;
-  container.attr("id", `chart-${chartNum}-container`);
+  let containerId = `${element}-chart-${chartNum}-container`;
+  container.attr("id", containerId);
   $("#" + element).append(container);
+  return containerId;
 }
 
-let createTitle = (element, title, fontSize, fontColor) => {
+let createTitle = (element, title, titleFontSize, titleColor) => {
   let titleDiv = $(`<div>${title}</div>`);
-  titleDiv.css("fontSize", fontSize+"px");
-  titleDiv.css("color", fontColor);
+  titleDiv.css("fontSize", titleFontSize+"px");
+  titleDiv.css("color", titleColor);
   titleDiv.addClass("chart-title");
   $("#"+element).append(titleDiv);
 }
@@ -88,9 +91,6 @@ let renderData = (graphType, element, data, barSpacing, barColor) => {
 let createBar = (height, width, value, maxVal, barWidth, barSpacing, barColor) => {
   let bar = $("<div></div>");
   let barHeight = height * value / maxVal;
-  console.log("height, barHeight: ", height, barHeight)
-  console.log("value: ", value)
-  console.log("maxVal: ", maxVal)
 
   bar.css("margin-left", barSpacing);
   bar.css("width", barWidth);
@@ -100,17 +100,36 @@ let createBar = (height, width, value, maxVal, barWidth, barSpacing, barColor) =
   return bar;
 }
 
-
 let drawBarChart = (data, options, element) => {
-
+  let containerId = createContainer(element, options["width"], options["height"])
+  createTitle(containerId, options["title"], options["titleFontSize"], options["titleColor"]);
+  createChartInner(containerId);
+  renderData(options["graphType"], containerId, data, options["barSpacing"], options["barColor"]);
 }
 
-createContainer("main-container", 600, 400)
-createTitle("chart-1-container", "Some Graph", 35, "red");
-createChartInner("chart-1-container");
-renderData("bar", "chart-1-container", [5,8,2,9,10, 4, 6, 12], 10, "red");
+let optionsA = {
+  graphType:"bar",
+  width:600,
+  height:400,
+  title:"Graph A",
+  titleFontSize:30,
+  titleColor:"red",
+  barSpacing:10,
+  barColor:"red",
+};
+let dataA = [5,8,2,9,10, 4, 6, 12];
+drawBarChart(dataA, optionsA, "main-container" );
 
-createContainer("main-container", 400, 600)
-createTitle("chart-2-container", "Some Graph", 35, "red");
-createChartInner("chart-2-container");
-renderData("stacked", "chart-2-container", [[2,6,4], [3,1,2], [5,3,2], [4,4,4]], 20, "blue");
+let optionsB = {
+  graphType:"stacked",
+  width:400,
+  height:600,
+  title:"Graph B",
+  titleFontSize:35,
+  titleColor:"darkblue",
+  barSpacing:15,
+  barColor:"blue",
+};
+let dataB = [[2,6,4], [3,1,2], [5,3,2], [4,4,7]];
+drawBarChart(dataB, optionsB, "main-container" );
+
