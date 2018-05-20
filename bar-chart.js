@@ -39,30 +39,67 @@ let createChartInner = (element) => {
 }
 
 //barWidth is fn of data.length, barHeight is fn of max(data)
-let createBars = (element, data, barSpacing, barColor) => {
+let renderData = (graphType, element, data, barSpacing, barColor) => {
   let axes = $("#" + element).find(".axes");
 
-  //We don't want the tallest bar going all the way to the top of the axes so scale them down to 80% of container
+  //We don't want the tallest bar going all the way to the top of the y axis so scale y-vals down to 80% of container
   let height = axes.innerHeight() * 0.8;
   let width = axes.innerWidth();
-  let maxVal = data.reduce((a,b) => a > b ? a:b);
-
   let totalSpacerWidth = barSpacing * (data.length + 1);
   let barWidth = (width - totalSpacerWidth) / data.length;
 
   for(let i=0; i < data.length; i++){
-    let curBar = $("<div></div>");
-    let curBarHeight = height * data[i] / maxVal;
+    //curData will be an array if graph has stacked bars, else curData will be a single value (number) for regular bars
+    let curData = data[i];
+    let curBar;
 
-    curBar.css("margin-left", barSpacing);
+    if(graphType === "bar"){
+      let maxVal = data.reduce((a,b) => a > b ? a:b);
+      let yVal = curData
+      curBar = createBar(height, width, yVal, maxVal, barWidth, barSpacing, barColor);
+
+    }else if(graphType === "stacked"){
+
+      //To find the max y-Val we need to sum the values in each stacked array and then compute the max sum
+      let maxVal = data.reduce((a,b) => {
+        let sumB = b.reduce((total, cur) => total + cur);
+        if(a > sumB) return a;
+        else return sumB;
+      }, 0);
+      //container for stacked values
+      curBar = $("<div></div");
+      curBar.addClass("stacked-bar");
+
+      for(let j = 0; j < data.length; j++){
+        let yVal = curData[j];
+        let randColor = `rgb(${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)})`
+        curStackedBar = createBar(height, width, yVal, maxVal, barWidth, barSpacing, randColor);
+        curBar.append(curStackedBar);
+      }
+    }
+
+    //since createBar fn doesn't know whether bars are stacked or not, we need to set this css outside the fn body
     curBar.css("display", "inline-block");
-    curBar.css("width", barWidth + "px");
-    curBar.css("height", curBarHeight);
-    curBar.css("background", barColor);
-    curBar.addClass("bar");
     axes.append(curBar);
   }
 }
+
+//height and width args refer to the axes - height is the max height of a bar
+let createBar = (height, width, value, maxVal, barWidth, barSpacing, barColor) => {
+  let bar = $("<div></div>");
+  let barHeight = height * value / maxVal;
+  console.log("height, barHeight: ", height, barHeight)
+  console.log("value: ", value)
+  console.log("maxVal: ", maxVal)
+
+  bar.css("margin-left", barSpacing);
+  bar.css("width", barWidth);
+  bar.css("height", barHeight);
+  bar.css("background", barColor);
+  bar.addClass("bar");
+  return bar;
+}
+
 
 let drawBarChart = (data, options, element) => {
 
@@ -71,9 +108,9 @@ let drawBarChart = (data, options, element) => {
 createContainer("main-container", 600, 400)
 createTitle("chart-1-container", "Some Graph", 35, "red");
 createChartInner("chart-1-container");
-createBars("chart-1-container", [5,8,2,9,10, 4, 6, 12], 10, "red");
+renderData("bar", "chart-1-container", [5,8,2,9,10, 4, 6, 12], 10, "red");
 
 createContainer("main-container", 400, 600)
 createTitle("chart-2-container", "Some Graph", 35, "red");
 createChartInner("chart-2-container");
-createBars("chart-2-container", [45,21,10,5,34], 20, "blue");
+renderData("stacked", "chart-2-container", [[2,6,4], [3,1,2], [5,3,2], [4,4,4]], 20, "blue");
