@@ -72,3 +72,9 @@ html, body {
   position:relative;
   bottom:calc(-100% - 5px);
 }
+
+.bar-value-label{
+  font-size:14px;
+  text-align:center;
+  position:relative;
+}

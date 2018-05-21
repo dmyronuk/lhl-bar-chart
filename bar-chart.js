@@ -8,7 +8,7 @@ let loadOptions = (options) => {
     titleColor:"black",
     barSpacing:15,
     barColor:"red",
-    barValuePosition:null,
+    barValPosition:null,
   };
 
   for(key in defaultOptions){
@@ -126,7 +126,7 @@ let getMaxVal = (data, dataClass, graphType) => {
 }
 
 //barWidth is fn of data.length, barHeight is fn of max(data)
-let renderData = (graphType, element, data, dataClass, maxVal, barSpacing, barColor) => {
+let renderData = (graphType, element, data, dataClass, maxVal, barSpacing, barColor, barValPosition) => {
   let axes = $("#" + element).find(".axes");
 
   //We don't want the tallest bar going all the way to the top of the y axis so scale y-vals down to 80% of container
@@ -151,6 +151,7 @@ let renderData = (graphType, element, data, dataClass, maxVal, barSpacing, barCo
         yVal = curData;
       }
       curBar = createBar(height, width, yVal, maxVal, barWidth, barSpacing, barColor);
+      if(barValPosition) appendBarValueLabel(barValPosition, yVal, curBar);
 
     }else if(graphType === "stacked"){
       //container for stacked values
@@ -184,6 +185,16 @@ let createBar = (height, width, value, maxVal, barWidth, barSpacing, barColor, b
   return bar;
 }
 
+let appendBarValueLabel = (barValPosition, barValue, parentBar) => {
+  let barLabelDiv = $("<div/>").addClass("bar-value-label");
+  barLabelDiv.text(barValue);
+  console.log(barValPosition)
+  if(barValPosition === "top") barLabelDiv.css("top", "-20px");
+  else if(barValPosition === "center") barLabelDiv.css("bottom", "calc(-50% + 7px)"); //compensate for font size; fix later
+  else if(barValPosition === "bottom") barLabelDiv.css("bottom", "calc(-100% + 20px)");
+  parentBar.append(barLabelDiv);
+}
+
 let appendBarLabel = (barLabel, parentBar) => {
   let barLabelDiv = $("<div/>").addClass("bar-label");
   barLabelDiv.text(barLabel);
@@ -207,7 +218,16 @@ let drawBarChart = (data, options, element) => {
   let maxVal = getMaxVal(data, dataClass, options.graphType);
   let tickInterval = getTickInterval(maxVal);
   createTicks(containerId, maxVal, tickInterval);
-  renderData(options.graphType, containerId, data, dataClass, maxVal, options.barSpacing, options.barColor);
+  renderData(
+    options.graphType,
+    containerId,
+    data,
+    dataClass,
+    maxVal,
+    options.barSpacing,
+    options.barColor,
+    options.barValPosition
+  );
 }
 
 let optionsA = {
@@ -219,9 +239,9 @@ let optionsA = {
   titleColor:"red",
   barSpacing:10,
   barColor:"blue",
-  barValuePosition:"top",
+  barValPosition:"center",
 };
-let dataA = [1200,580,1452,1300,300];
+let dataA = [1200,580,1452,1300,300, 975, 800, 760, 452];
 drawBarChart(dataA, optionsA, "main-container" );
 
 let optionsB = {
@@ -233,7 +253,7 @@ let optionsB = {
   titleColor:"darkblue",
   barSpacing:15,
   barColor:"blue",
-  barValuePosition:null,
+  barValPosition:null,
 };
 let dataB = [[2,6,4], [3,1,2], [5,3,2], [4,4,7]];
 drawBarChart(dataB, optionsB, "main-container" );
@@ -247,7 +267,7 @@ let optionsC = {
   titleColor:"darkblue",
   barSpacing:15,
   barColor:"blue",
-  barValuePosition:null,
+  barValPosition:"top",
 };
 let dataC = [
   {value:10, color:"red", label:"Bar A"},
