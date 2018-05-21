@@ -70,5 +70,5 @@ html, body {
   font-size:14px;
   text-align:center;
   position:relative;
-  bottom:-100%;
+  bottom:calc(-100% - 5px);
 }

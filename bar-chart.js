@@ -118,20 +118,18 @@ let renderData = (graphType, element, data, dataClass, maxVal, barSpacing, barCo
     //curData will be an array if graph has stacked bars, else curData will be a single value for regular bars
     let curData = data[i];
     let curBar;
+    let barLabel;
+    (dataClass === "Object" && curData.label) ? barLabel = curData.label : barLabel = null;
 
     if(graphType === "bar"){
-      let barLabel = null;
       let yVal; // curData should be either a Number or an Object
       if(dataClass === "Object"){
         yVal = curData.value
         if(curData.color) barColor = curData.color;
-        if(curData.label) barLabel = curData.label;
-
       }else{
         yVal = curData;
       }
-
-      curBar = createBar(height, width, yVal, maxVal, barWidth, barSpacing, barColor, barLabel);
+      curBar = createBar(height, width, yVal, maxVal, barWidth, barSpacing, barColor);
 
     }else if(graphType === "stacked"){
       //container for stacked values
@@ -146,8 +144,10 @@ let renderData = (graphType, element, data, dataClass, maxVal, barSpacing, barCo
         curBar.append(curStackedBar);
       }
     }
+
     //since createBar fn doesn't know whether bars are stacked or not, we need to set this css value outside the fn body
     curBar.css("display", "inline-block");
+    if(barLabel) appendBarLabel(barLabel, curBar)
     axes.append(curBar);
   }
 }
@@ -160,19 +160,13 @@ let createBar = (height, width, value, maxVal, barWidth, barSpacing, barColor, b
   bar.css("width", barWidth);
   bar.css("height", barHeight);
   bar.css("background", barColor);
-
-  if(barLabel){
-    let barLabelDiv = createBarLabel(barLabel);
-    bar.append(barLabelDiv);
-  }
-
   return bar;
 }
 
-let createBarLabel = (barLabel) => {
+let appendBarLabel = (barLabel, parentBar) => {
   let barLabelDiv = $("<div/>").addClass("bar-label");
   barLabelDiv.text(barLabel);
-  return barLabelDiv;
+  parentBar.append(barLabelDiv);
 }
 
 let drawBarChart = (data, options, element) => {
