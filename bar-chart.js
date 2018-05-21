@@ -153,14 +153,26 @@ let renderData = (graphType, element, data, dataClass, maxVal, barSpacing, barCo
 }
 
 //height and width args refer to the axes - height is the max height of a bar
-let createBar = (height, width, value, maxVal, barWidth, barSpacing, barColor) => {
+let createBar = (height, width, value, maxVal, barWidth, barSpacing, barColor, barLabel) => {
   let bar = $("<div/>").addClass("bar");
   let barHeight = height * value / maxVal;
   bar.css("margin-left", barSpacing);
   bar.css("width", barWidth);
   bar.css("height", barHeight);
   bar.css("background", barColor);
+
+  if(barLabel){
+    let barLabelDiv = createBarLabel(barLabel);
+    bar.append(barLabelDiv);
+  }
+
   return bar;
+}
+
+let createBarLabel = (barLabel) => {
+  let barLabelDiv = $("<div/>").addClass("bar-label");
+  barLabelDiv.text(barLabel);
+  return barLabelDiv;
 }
 
 let drawBarChart = (data, options, element) => {
@@ -222,11 +234,11 @@ let optionsC = {
   barValuePosition:null,
 };
 let dataC = [
-  {value:10, color:"red", label:"barA"},
-  {value:7, color:"orange", label:"barB"},
-  {value:8, color:"yellow", label:"barC"},
-  {value:4, color:"green", label:"barD"},
-  {value:9, color:"blue", label:"barE"},
+  {value:10, color:"red", label:"Bar A"},
+  {value:7, color:"orange", label:"Bar B"},
+  {value:8, color:"yellow", label:"Bar C"},
+  {value:4, color:"green", label:"Bar D"},
+  {value:9, color:"blue", label:"Bar E"},
 ];
 drawBarChart(dataC, optionsC, "main-container" );
 
