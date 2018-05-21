@@ -1,3 +1,24 @@
+let loadOptions = (options) => {
+  let defaultOptions = {
+    graphType:"bar",
+    width:500,
+    height:500,
+    title:"Title",
+    titleFontSize:35,
+    titleColor:"black",
+    barSpacing:15,
+    barColor:"red",
+    barValuePosition:null,
+  };
+
+  for(key in defaultOptions){
+    if(options[key] === undefined){
+      options[key] = defaultOptions[key];
+    }
+  }
+  return options;
+}
+
 let createContainer = (element, width, height) => {
   let container = $("<div></div");
   container.css("width", width);
@@ -178,6 +199,7 @@ let drawBarChart = (data, options, element) => {
     return;
   }
 
+  options = loadOptions(options); //substitutes default options for undefined params
   let containerId = createContainer(element, options.width, options.height);
   createTitle(containerId, options.title, options.titleFontSize, options.titleColor);
   createChartInner(containerId);
@@ -196,7 +218,7 @@ let optionsA = {
   titleFontSize:30,
   titleColor:"red",
   barSpacing:10,
-  barColor:"red",
+  barColor:"blue",
   barValuePosition:"top",
 };
 let dataA = [1200,580,1452,1300,300];
@@ -235,4 +257,8 @@ let dataC = [
   {value:9, color:"blue", label:"Bar E"},
 ];
 drawBarChart(dataC, optionsC, "main-container" );
+
+let optionsD = {title:"Default Graph"};
+let dataD = [100, 45, 23, 87, 92];
+drawBarChart(dataD, optionsD, "main-container" );
 
