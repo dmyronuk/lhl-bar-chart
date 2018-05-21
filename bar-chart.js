@@ -1,4 +1,4 @@
-let loadOptions = (options) => {
+let loadOptions = (options, data, dataClass) => {
   let defaultOptions = {
     graphType:"bar",
     width:500,
@@ -8,12 +8,23 @@ let loadOptions = (options) => {
     titleColor:"black",
     barSpacing:15,
     barColor:"red",
+    stackedBarColors:[],
     barValPosition:null,
   };
 
   for(key in defaultOptions){
     if(options[key] === undefined){
       options[key] = defaultOptions[key];
+    }
+  }
+
+  //assign random colors if graph is stacked and user does not pass enough values into stackedBarColors array
+  if(options.graphType === "stacked"){
+    let numStacked; //each stack is composed of how many bars?
+    (dataClass === "Object") ? numStacked = data.value[0].length : numStacked = data[0].length;
+    while(options.stackedBarColors.length < numStacked){
+      let randColor = getRandomColor();
+      options.stackedBarColors.push(randColor);
     }
   }
   return options;
@@ -63,7 +74,7 @@ let getTickInterval = (maxVal) => {
   let exp = Math.floor(Math.log10(maxVal));
   let tickInterval = 10 ** exp; // largest power of 10 that's less than our max Val
 
-  let multiple = maxVal / tickInterval; // this is how many ticks we get at the current Interval
+  let multiple = maxVal / tickInterval; // number of ticks we get at the current Interval
   if(multiple <= 2){tickInterval /= 5}
   else if(multiple <= 5){tickInterval /= 2};
 
@@ -125,8 +136,12 @@ let getMaxVal = (data, dataClass, graphType) => {
   }
 }
 
+let getRandomColor = () => {
+  return `rgb(${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)})`
+}
+
 //barWidth is fn of data.length, barHeight is fn of max(data)
-let renderData = (graphType, element, data, dataClass, maxVal, barSpacing, barColor, barValPosition) => {
+let renderData = (graphType, element, data, dataClass, maxVal, barSpacing, barColor, barValPosition, stackedBarColors) => {
   let axes = $("#" + element).find(".axes");
 
   //We don't want the tallest bar going all the way to the top of the y axis so scale y-vals down to 80% of container
@@ -161,8 +176,11 @@ let renderData = (graphType, element, data, dataClass, maxVal, barSpacing, barCo
         let yVal  // curData is either an Array or an Object - if Object, it's 'value' property is an array of values
         (dataClass === "Object") ? yVal = curData[j].value : yVal = curData[j]
 
-        let randColor = `rgb(${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)})`
-        curStackedBar = createBar(height, width, yVal, maxVal, barWidth, barSpacing, randColor);
+        //let randColor = `rgb(${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)})`
+        let color = stackedBarColors[j];
+        console.log(color)
+        console.log("stacked colors: ", stackedBarColors)
+        curStackedBar = createBar(height, width, yVal, maxVal, barWidth, barSpacing, color);
         curBar.append(curStackedBar);
       }
     }
@@ -188,7 +206,6 @@ let createBar = (height, width, value, maxVal, barWidth, barSpacing, barColor, b
 let appendBarValueLabel = (barValPosition, barValue, parentBar) => {
   let barLabelDiv = $("<div/>").addClass("bar-value-label");
   barLabelDiv.text(barValue);
-  console.log(barValPosition)
   if(barValPosition === "top") barLabelDiv.css("top", "-20px");
   else if(barValPosition === "center") barLabelDiv.css("bottom", "calc(-50% + 7px)"); //compensate for font size; fix later
   else if(barValPosition === "bottom") barLabelDiv.css("bottom", "calc(-100% + 20px)");
@@ -210,7 +227,7 @@ let drawBarChart = (data, options, element) => {
     return;
   }
 
-  options = loadOptions(options); //substitutes default options for undefined params
+  options = loadOptions(options, data, dataClass); //substitutes default options for undefined params
   let containerId = createContainer(element, options.width, options.height);
   createTitle(containerId, options.title, options.titleFontSize, options.titleColor);
   createChartInner(containerId);
@@ -226,7 +243,8 @@ let drawBarChart = (data, options, element) => {
     maxVal,
     options.barSpacing,
     options.barColor,
-    options.barValPosition
+    options.barValPosition,
+    options.stackedBarColors,
   );
 }
 
@@ -255,7 +273,7 @@ let optionsB = {
   barColor:"blue",
   barValPosition:null,
 };
-let dataB = [[2,6,4], [3,1,2], [5,3,2], [4,4,7]];
+let dataB = [[2,6,4,2], [3,1,2,2], [5,3,2,5], [4,4,7,3]];
 drawBarChart(dataB, optionsB, "main-container" );
 
 let optionsC = {
