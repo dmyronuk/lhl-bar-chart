@@ -78,3 +78,26 @@ html, body {
   text-align:center;
   position:relative;
 }
+
+.legend{
+  margin-top:10px;
+  display:flex;
+  flex-direction:row;
+  align-items:center;
+  justify-content:center;
+  background:pink;
+}
+
+.legend-color-box{
+  display:inline-block;
+  height:10px;
+  width:10px;
+  margin:auto 3px auto 10px;
+
+  background:yellow;
+}
+
+.legend-label{
+  font-size:10px;
+  display:inline-block;
+}

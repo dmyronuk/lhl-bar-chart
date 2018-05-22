@@ -9,6 +9,7 @@ let loadOptions = (options, data, dataClass) => {
     barSpacing:15,
     barColor:"red",
     stackedBarColors:[],
+    stackedBarLegend:null,
     barValPosition:null,
     barValColor:"black",
   };
@@ -176,12 +177,11 @@ let renderData = (data, options, element, dataClass, maxVal) => {
 
       for(let j = 0; j < data.length; j++){
         let yVal  // curData is either an Array or an Object - if Object, it's 'value' property is an array of values
-        (dataClass === "Object") ? yVal = curData[j].value : yVal = curData[j]
+        (dataClass === "Object") ? yVal = curData[j].value : yVal = curData[j];
 
-        //let randColor = `rgb(${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)})`
         let color = options.stackedBarColors[j];
         curStackedBar = createBar(height, width, yVal, maxVal, barWidth, options.barSpacing, color);
-        curBar.append(curStackedBar);
+        curBar.prepend(curStackedBar);
       }
     }
 
@@ -219,6 +219,26 @@ let appendBarLabel = (barLabel, parentBar) => {
   parentBar.append(barLabelDiv);
 }
 
+//Legend for stacked bar graph colors
+let appendLegend = (stackedBarLegend, stackedBarColors, containerId) => {
+  let container = $("#"+containerId)
+  let legend = $("<div/>").addClass("legend");
+  legend.css("width", container.width());
+
+  for(let i = 0; i < stackedBarLegend.length; i++){
+    let legendItem = $("<div/>");
+    let legendColorBox = $("<div/>").addClass("legend-color-box");
+    legendColorBox.css("background", stackedBarColors[i]);
+
+    let legendLabel = $("<div/>").addClass("legend-label");
+    legendLabel.text(stackedBarLegend[i]);
+
+    legendItem.append(legendColorBox, legendLabel);
+    legend.append(legendItem);
+  }
+  container.after(legend);
+}
+
 let drawBarChart = (data, options, element) => {
   let dataClass;
   try{
@@ -237,6 +257,9 @@ let drawBarChart = (data, options, element) => {
   let tickInterval = getTickInterval(maxVal);
   createTicks(containerId, maxVal, tickInterval);
   renderData(data, options, containerId, dataClass, maxVal);
+  if(options.graphType === "stacked" && options.stackedBarLegend){
+    appendLegend(options.stackedBarLegend, options.stackedBarColors, containerId);
+  }
 }
 
 let optionsA = {
@@ -264,6 +287,8 @@ let optionsB = {
   barSpacing:15,
   barColor:"blue",
   barValPosition:null,
+  stackedBarLegend:["Legend A", "Legend B", "Legend C", "Legend D"],
+  stackedBarColors:["red", "orange", "yellow", "blue"],
 };
 let dataB = [[2,6,4,2], [3,1,2,2], [5,3,2,5], [4,4,7,3]];
 drawBarChart(dataB, optionsB, "main-container" );
