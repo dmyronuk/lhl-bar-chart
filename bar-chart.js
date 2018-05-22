@@ -181,6 +181,7 @@ let renderData = (data, options, element, dataClass, maxVal) => {
 
         let color = options.stackedBarColors[j];
         curStackedBar = createBar(height, width, yVal, maxVal, barWidth, options.barSpacing, color);
+        if(options.barValPosition) appendBarValueLabel(options.barValPosition, options.barValColor, yVal, curStackedBar);
         curBar.prepend(curStackedBar);
       }
     }
@@ -256,6 +257,7 @@ let drawBarChart = (data, options, element) => {
   let maxVal = getMaxVal(data, dataClass, options.graphType);
   let tickInterval = getTickInterval(maxVal);
   createTicks(containerId, maxVal, tickInterval);
+
   renderData(data, options, containerId, dataClass, maxVal);
   if(options.graphType === "stacked" && options.stackedBarLegend){
     appendLegend(options.stackedBarLegend, options.stackedBarColors, containerId);
@@ -286,7 +288,8 @@ let optionsB = {
   titleColor:"darkblue",
   barSpacing:15,
   barColor:"blue",
-  barValPosition:null,
+  barValPosition:"center",
+  barValColor:"white",
   stackedBarLegend:["Legend A", "Legend B", "Legend C", "Legend D"],
   stackedBarColors:["red", "orange", "yellow", "blue"],
 };
