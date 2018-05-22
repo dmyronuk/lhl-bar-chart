@@ -10,6 +10,7 @@ let loadOptions = (options, data, dataClass) => {
     barColor:"red",
     stackedBarColors:[],
     barValPosition:null,
+    barValColor:"black",
   };
 
   for(key in defaultOptions){
@@ -104,7 +105,7 @@ let createTicks = (containerId, maxVal, tickInterval) => {
   }
 }
 
-/* data arg can be either an array of object (labelled values), an array of subarrays (stacked graph) or an array of ints
+/* data arg can be either an array of objects (labelled values), an array of subarrays (stacked graph) or an array of ints
 Fn checks that all values in the data array are of the same class and returns a string representing the class ie "Array"
 obj.constructor.name is only available in ES6 */
 let getDataClass = (data) => {
@@ -141,13 +142,13 @@ let getRandomColor = () => {
 }
 
 //barWidth is fn of data.length, barHeight is fn of max(data)
-let renderData = (graphType, element, data, dataClass, maxVal, barSpacing, barColor, barValPosition, stackedBarColors) => {
+let renderData = (data, options, element, dataClass, maxVal) => {
   let axes = $("#" + element).find(".axes");
 
   //We don't want the tallest bar going all the way to the top of the y axis so scale y-vals down to 80% of container
   let height = axes.innerHeight() * 0.8;
   let width = axes.innerWidth();
-  let totalSpacerWidth = barSpacing * (data.length + 1);
+  let totalSpacerWidth = options.barSpacing * (data.length + 1);
   let barWidth = (width - totalSpacerWidth) / data.length;
 
   for(let i=0; i < data.length; i++){
@@ -155,20 +156,21 @@ let renderData = (graphType, element, data, dataClass, maxVal, barSpacing, barCo
     let curData = data[i];
     let curBar;
     let barLabel;
+    let barColor = options.barColor; //need local var that may be overridden later by bar obj.color property
     (dataClass === "Object" && curData.label) ? barLabel = curData.label : barLabel = null;
 
-    if(graphType === "bar"){
+    if(options.graphType === "bar"){
       let yVal; // curData should be either a Number or an Object
       if(dataClass === "Object"){
-        yVal = curData.value
+        yVal = curData.value;
         if(curData.color) barColor = curData.color;
       }else{
         yVal = curData;
       }
-      curBar = createBar(height, width, yVal, maxVal, barWidth, barSpacing, barColor);
-      if(barValPosition) appendBarValueLabel(barValPosition, yVal, curBar);
+      curBar = createBar(height, width, yVal, maxVal, barWidth, options.barSpacing, barColor);
+      if(options.barValPosition) appendBarValueLabel(options.barValPosition, options.barValColor, yVal, curBar);
 
-    }else if(graphType === "stacked"){
+    }else if(options.graphType === "stacked"){
       //container for stacked values
       curBar = $("<div/>").addClass("stacked-bar");
 
@@ -177,10 +179,8 @@ let renderData = (graphType, element, data, dataClass, maxVal, barSpacing, barCo
         (dataClass === "Object") ? yVal = curData[j].value : yVal = curData[j]
 
         //let randColor = `rgb(${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)})`
-        let color = stackedBarColors[j];
-        console.log(color)
-        console.log("stacked colors: ", stackedBarColors)
-        curStackedBar = createBar(height, width, yVal, maxVal, barWidth, barSpacing, color);
+        let color = options.stackedBarColors[j];
+        curStackedBar = createBar(height, width, yVal, maxVal, barWidth, options.barSpacing, color);
         curBar.append(curStackedBar);
       }
     }
@@ -203,9 +203,10 @@ let createBar = (height, width, value, maxVal, barWidth, barSpacing, barColor, b
   return bar;
 }
 
-let appendBarValueLabel = (barValPosition, barValue, parentBar) => {
+let appendBarValueLabel = (barValPosition, barValColor, barValue, parentBar) => {
   let barLabelDiv = $("<div/>").addClass("bar-value-label");
   barLabelDiv.text(barValue);
+  barLabelDiv.css("color", barValColor);
   if(barValPosition === "top") barLabelDiv.css("top", "-20px");
   else if(barValPosition === "center") barLabelDiv.css("bottom", "calc(-50% + 7px)"); //compensate for font size; fix later
   else if(barValPosition === "bottom") barLabelDiv.css("bottom", "calc(-100% + 20px)");
@@ -235,17 +236,7 @@ let drawBarChart = (data, options, element) => {
   let maxVal = getMaxVal(data, dataClass, options.graphType);
   let tickInterval = getTickInterval(maxVal);
   createTicks(containerId, maxVal, tickInterval);
-  renderData(
-    options.graphType,
-    containerId,
-    data,
-    dataClass,
-    maxVal,
-    options.barSpacing,
-    options.barColor,
-    options.barValPosition,
-    options.stackedBarColors,
-  );
+  renderData(data, options, containerId, dataClass, maxVal);
 }
 
 let optionsA = {
@@ -258,8 +249,9 @@ let optionsA = {
   barSpacing:10,
   barColor:"blue",
   barValPosition:"center",
+  barValColor:"white",
 };
-let dataA = [1200,580,1452,1300,300, 975, 800, 760, 452];
+let dataA = [300, 90, 1005, 450, 627];
 drawBarChart(dataA, optionsA, "main-container" );
 
 let optionsB = {
