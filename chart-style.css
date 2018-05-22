@@ -44,7 +44,7 @@ html, body {
   position:relative;
   display:flex;
   align-items:flex-end;
-  background:#dddddd;
+  background:white;
   margin:40px;
   border-color:black;
   border-left:black solid 2px;
@@ -64,6 +64,11 @@ html, body {
   font-size:10px;
   left:-40px;
   text-align:right;
+}
+
+.grid-line{
+  height:1px;
+  position:absolute;
 }
 
 .stacked-bar{

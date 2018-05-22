@@ -13,6 +13,7 @@ let loadOptions = (options, data, dataClass) => {
     barValPosition:null,
     barValColor:"black",
     barLabelColor:"black",
+    displayGrid:true,
   };
 
   for(key in defaultOptions){
@@ -84,9 +85,10 @@ let getTickInterval = (maxVal) => {
   return tickInterval;
 }
 
-let createTicks = (containerId, maxVal, tickInterval) => {
+let createTicks = (containerId, maxVal, tickInterval, displayGrid) => {
   let axes = $("#" + containerId).find(".axes");
   let axisHeight = axes.innerHeight();
+  let axisWidth = axes.innerWidth();
   let maxHeight = axes.innerHeight() * 0.8; //Bars are scaled to 80% axis height so ticks should be scaled by same ratio
   let curTickVal = tickInterval;
   let tickHeight = maxHeight * tickInterval / maxVal;
@@ -101,6 +103,14 @@ let createTicks = (containerId, maxVal, tickInterval) => {
     let tick = $("<div/>").addClass("tick");
     tick.css("bottom", curHeight);
     axes.append(tick);
+
+    if(displayGrid){
+      let gridLine = $("<div/>").addClass("grid-line");
+      gridLine.css("bottom", curHeight);
+      gridLine.css("width", axisWidth);
+      gridLine.css("background", "#dddddd");
+      axes.append(gridLine);
+    }
 
     curTickVal += tickInterval;
     curHeight += tickHeight;
@@ -271,7 +281,7 @@ let drawBarChart = (data, options, element) => {
 
   let maxVal = getMaxVal(data, dataClass, options.graphType);
   let tickInterval = getTickInterval(maxVal);
-  createTicks(containerId, maxVal, tickInterval);
+  createTicks(containerId, maxVal, tickInterval, options.displayGrid);
 
   renderData(data, options, containerId, dataClass, maxVal);
   if(options.graphType === "stacked" && options.stackedBarLegend){
@@ -290,6 +300,7 @@ let optionsA = {
   barColor:"blue",
   barValPosition:"center",
   barValColor:"white",
+  displayGrid:true,
 };
 let dataA = [300, 90, 1005, 450, 627];
 drawBarChart(dataA, optionsA, "main-container" );
@@ -322,6 +333,7 @@ let optionsC = {
   barValColor:"red",
   barValPosition:"top",
   barLabelColor:"blue",
+  displayGrid:true,
 };
 let dataC = [
   {value:10, color:"red", label:"Bar A"},
@@ -358,4 +370,3 @@ drawBarChart(dataD, optionsD, "main-container" );
 let optionsE = {title:"Default Graph"};
 let dataE = [100, 45, 23, 87, 92];
 drawBarChart(dataE, optionsE, "main-container" );
-
