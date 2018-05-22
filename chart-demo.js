@@ -75,6 +75,6 @@ let dataD = [
 ];
 drawBarChart(dataD, optionsD, "main-container" );
 
-let optionsE = {title:"Default Graph"};
+let optionsE = {};
 let dataE = [100, 45, 23, 87, 92];
-drawBarChart(dataE, optionsE, "main-container" );
+drawBarChart(dataE, "main-container");

@@ -3,7 +3,7 @@ let loadOptions = (options, data, dataClass) => {
     graphType:"bar",
     width:500,
     height:500,
-    title:"Title",
+    title:"Graph Title",
     titleFontSize:35,
     titleColor:"black",
     barSpacing:15,
@@ -266,6 +266,13 @@ let appendLegend = (stackedBarLegend, stackedBarColors, containerId) => {
 }
 
 let drawBarChart = (data, options, element) => {
+  /*Options arg is optional.  The assignment specifies the args in this order but I would prefer (data, element, options).
+  In the former case, when we check if element is undefined we're really checking if options is undefined */
+  if(! element){
+    element = options;
+    options = {};
+  }
+
   let dataClass;
   try{
     dataClass = getDataClass(data);
