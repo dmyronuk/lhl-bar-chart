@@ -66,11 +66,19 @@ html, body {
   text-align:right;
 }
 
+.stacked-bar{
+  position:relative;
+}
+
+.bar{
+  position:relative;
+}
+
 .bar-label{
   font-size:14px;
   text-align:center;
   position:relative;
-  bottom:calc(-100% - 5px);
+  bottom:calc(-100%);
 }
 
 .bar-value-label{
@@ -93,8 +101,6 @@ html, body {
   height:10px;
   width:10px;
   margin:auto 3px auto 10px;
-
-  background:yellow;
 }
 
 .legend-label{

@@ -12,6 +12,7 @@ let loadOptions = (options, data, dataClass) => {
     stackedBarLegend:null,
     barValPosition:null,
     barValColor:"black",
+    barLabelColor:"black",
   };
 
   for(key in defaultOptions){
@@ -23,7 +24,7 @@ let loadOptions = (options, data, dataClass) => {
   //assign random colors if graph is stacked and user does not pass enough values into stackedBarColors array
   if(options.graphType === "stacked"){
     let numStacked; //each stack is composed of how many bars?
-    (dataClass === "Object") ? numStacked = data.value[0].length : numStacked = data[0].length;
+    (dataClass === "Object") ? numStacked = data[0].value[0].length : numStacked = data[0].length;
     while(options.stackedBarColors.length < numStacked){
       let randColor = getRandomColor();
       options.stackedBarColors.push(randColor);
@@ -176,8 +177,8 @@ let renderData = (data, options, element, dataClass, maxVal) => {
       curBar = $("<div/>").addClass("stacked-bar");
 
       for(let j = 0; j < data.length; j++){
-        let yVal  // curData is either an Array or an Object - if Object, it's 'value' property is an array of values
-        (dataClass === "Object") ? yVal = curData[j].value : yVal = curData[j];
+        let yVal;  // curData is either an Array or an Object - if Object, it's 'value' property is an array of values
+        (dataClass === "Object") ? yVal = curData.value[j] : yVal = curData[j];
 
         let color = options.stackedBarColors[j];
         curStackedBar = createBar(height, width, yVal, maxVal, barWidth, options.barSpacing, color);
@@ -188,7 +189,11 @@ let renderData = (data, options, element, dataClass, maxVal) => {
 
     //since createBar fn doesn't know whether bars are stacked or not, we need to set this css value outside the fn body
     curBar.css("display", "inline-block");
-    if(barLabel) appendBarLabel(barLabel, curBar)
+    if(barLabel){
+      //If it's a stacked chart, the label's parent should be the bottom block of the stack
+      let labelParent = (options.graphType === "stacked") ? $(curBar.children().last()[0]) : curBar;
+      appendBarLabel(barLabel, labelParent, options.barLabelColor, options.graphType);
+    }
     axes.append(curBar);
   }
 }
@@ -214,13 +219,23 @@ let appendBarValueLabel = (barValPosition, barValColor, barValue, parentBar) => 
   parentBar.append(barLabelDiv);
 }
 
-let appendBarLabel = (barLabel, parentBar) => {
+let appendBarLabel = (barLabel, parentBar, barLabelColor, graphType) => {
   let barLabelDiv = $("<div/>").addClass("bar-label");
+  barLabelDiv.css("color", barLabelColor);
   barLabelDiv.text(barLabel);
+
+  if(graphType === "stacked"){
+    parentBar.css("position", "relative");
+    barLabelDiv.css("position", "absolute");
+    barLabelDiv.css("width", "100%");
+    barLabelDiv.css("bottom", "-30px")
+  }
+
   parentBar.append(barLabelDiv);
 }
 
 //Legend for stacked bar graph colors
+//Legend renders outside of the container defined by options.height, options.width - may change in future
 let appendLegend = (stackedBarLegend, stackedBarColors, containerId) => {
   let container = $("#"+containerId)
   let legend = $("<div/>").addClass("legend");
@@ -304,8 +319,9 @@ let optionsC = {
   titleFontSize:35,
   titleColor:"darkblue",
   barSpacing:15,
-  barColor:"blue",
+  barValColor:"red",
   barValPosition:"top",
+  barLabelColor:"blue",
 };
 let dataC = [
   {value:10, color:"red", label:"Bar A"},
@@ -316,7 +332,30 @@ let dataC = [
 ];
 drawBarChart(dataC, optionsC, "main-container" );
 
-let optionsD = {title:"Default Graph"};
-let dataD = [100, 45, 23, 87, 92];
+let optionsD = {
+  graphType:"stacked",
+  width:400,
+  height:600,
+  title:"Graph D",
+  titleFontSize:35,
+  titleColor:"darkblue",
+  barSpacing:15,
+  barColor:"blue",
+  barValPosition:"center",
+  barValColor:"white",
+  stackedBarLegend:["Legend A", "Legend B", "Legend C", "Legend D"],
+  stackedBarColors:["#3b4274", "#62678f", "#b0b3c7", "#c4c6d5"],
+};
+let dataD = [
+  {value:[2,6,4,2], color:"red", label:"Stack A"},
+  {value:[3,1,2,2], color:"orange", label:"Stack B"},
+  {value:[5,3,2,5], color:"yellow", label:"Stack C"},
+  {value:[4,4,7,3], color:"green", label:"Stack D"},
+];
 drawBarChart(dataD, optionsD, "main-container" );
+
+
+let optionsE = {title:"Default Graph"};
+let dataE = [100, 45, 23, 87, 92];
+drawBarChart(dataE, optionsE, "main-container" );
 
