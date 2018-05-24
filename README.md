@@ -17,18 +17,13 @@ drawBarChart(data, options, element)
 - *Type: Array* - Each element represents a data value or array of values to be rendered as a single bar. Each element can be labelled and assigned it's own color.
   - Unstacked bar graph with no labels and no per-bar color assignments: `data = [1, 2, 3, 4 ...]`
 
-  - Stacked bar graph with no labels and no per-bar color assignments: `data = [[1, 2, 3], [4, 5, 6], [7, 8, 9] ...]`
+  - Stacked bar graph with no labels and no per-bar color assignments: `data = [[1, 2, 3], [4, 5, 6], [7, 8, 9]]`
 
   - Unstacked bar graph with labels or per-bar color assignments:
-    ```javascript data = [{value : 10, color : "red", label: "apples"}, {value: 5, color: "yellow", label:"bananas"} ...]`
+    `data = [{value : 10, color : "red", label: "apples"}, {value: 5, color: "yellow", label:"bananas"} ...]`
 
   - Stacked bar graph with labels or per-bar color assignments:
-    ```javascript data = [
-        {value : [1, 2, 3], color : "black", label: "Monday"},
-        {value: [4, 5, 6], color: "blue", label:"Tuesday"},
-        {value: [7, 8, 9], color: "red", label:"Wednesday"},
-        ]```
-
+    `data = [{value : [1, 2, 3], color : "black", label: "Monday"}, {value: [4, 5, 6], color: "blue", label:"Tuesday"}]`
 
 #### options
 - *Type: Object* - An object representing configuration options for the graph.  If no options argument is supplied, the graph will be rendered using a default configuration.
@@ -50,7 +45,7 @@ drawBarChart(data, options, element)
 
   - `options.stackedBarColors` *Array* - Applies to stacked graphs.  Each element of the array is a string representing a stacked bar color.  The 0th element is the bottom color and the last element is the top color.  If this option is not set, colors will be randomly assigned.  Similarly, if not enough colors are supplied, i.e. each stacked bar has 4 data values but only 3 colors are specified, then the 4th color will be randomly assigned.
 
-  - `options.stackedBarLegend` *null | Array* - Applies to stacked graphs.  Appends a legend below the graph container that maps stacked bar colors to a label.  Each element of the array is a string that is matched with a color.  The n<sup>th</sup>element of the array matches with the n<sup>th</sup> element of `stackedBarColors`.
+  - `options.stackedBarLegend` *null | Array* - Applies to stacked graphs.  Appends a legend below the graph container that maps stacked bar colors to a label.  Each element of the array is a string that is matched with a color.  The n<sup>th</sup> element of the array matches with the n<sup>th</sup> element of `stackedBarColors`.
 
   - `options.barValPosition` *null | String ("bottom" | "center" | "top")* - Toggles whether or not the numeric value of each bar will be displayed alongside the bar.  If not null, the string specifies the relative position of the value label.
 
