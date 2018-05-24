@@ -15,12 +15,12 @@ drawBarChart(data, options, element)
 
 #### data
 - *Type: Array* - Each element represents a data value or array of values to be rendered as a single bar. Each element can be labelled and assigned it's own color.
-  - Unstacked bar graph with no labels and no per-bar color assignments: `data = [1, 2, 3, 4 ...]`
+  - Unstacked bar graph with no labels and no per-bar color assignments: `data = [1, 2, 3, 4]`
 
   - Stacked bar graph with no labels and no per-bar color assignments: `data = [[1, 2, 3], [4, 5, 6], [7, 8, 9]]`
 
   - Unstacked bar graph with labels or per-bar color assignments:
-    `data = [{value : 10, color : "red", label: "apples"}, {value: 5, color: "yellow", label:"bananas"} ...]`
+    `data = [{value : 10, color : "red", label: "apples"}, {value: 5, color: "yellow", label:"bananas"}]`
 
   - Stacked bar graph with labels or per-bar color assignments:
     `data = [{value : [1, 2, 3], color : "black", label: "Monday"}, {value: [4, 5, 6], color: "blue", label:"Tuesday"}]`
@@ -71,6 +71,7 @@ drawBarChart(data, options, element)
 * [Markdown Live Preview](http://markdownlivepreview.com/)
 * [Awesome-Computer-Vision](https://github.com/jbhuang0604/awesome-computer-vision/blob/master/README.md) - Markdown example
 * [Mozilla Web Docs](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/Reduce) - Array.prototype.reduce()
+* [Mozilla Web Docs](https://developer.mozilla.org/en-US/docs/Web/CSS/outline) - CSS outline property
 * [jQuery Documentation](http://api.jquery.com) - .prepend() .after() .hasClass()
 * [stackoverflow](https://stackoverflow.com/questions/1249531/how-to-get-a-javascript-objects-class#1249554) - Help with typeof, instanceof, obj.constructor
 * [stackoverflow](https://stackoverflow.com/questions/280389/how-do-you-find-out-the-caller-function-in-javascript) - Help debugging

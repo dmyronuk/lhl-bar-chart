@@ -1,5 +1,4 @@
 let optionsA = {
-  graphType:"bar",
   width:600,
   height:400,
   title:"Graph A",
@@ -7,6 +6,7 @@ let optionsA = {
   titleColor:"red",
   barSpacing:10,
   barColor:"blue",
+  displayBarOutlines:true,
   barValPosition:"center",
   barValColor:"white",
 };
@@ -14,14 +14,13 @@ let dataA = [300, 90, 1005, 450, 627];
 drawBarChart(dataA, optionsA, "main-container" );
 
 let optionsB = {
-  graphType:"stacked",
   width:400,
   height:600,
   title:"Graph B",
   titleFontSize:35,
   titleColor:"darkblue",
   barSpacing:15,
-  barColor:"blue",
+  displayBarOutlines:true,
   barValPosition:"center",
   barValColor:"white",
   stackedBarLegend:["Legend A", "Legend B", "Legend C", "Legend D"],
@@ -32,7 +31,6 @@ let dataB = [[2,6,4,2], [3,1,2,2], [5,3,2,5], [4,4,7,3]];
 drawBarChart(dataB, optionsB, "main-container" );
 
 let optionsC = {
-  graphType:"bar",
   width:500,
   height:500,
   title:"Graph C",
@@ -53,7 +51,6 @@ let dataC = [
 drawBarChart(dataC, optionsC, "main-container" );
 
 let optionsD = {
-  graphType:"stacked",
   width:400,
   height:600,
   title:"Graph D",
