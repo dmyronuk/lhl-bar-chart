@@ -73,5 +73,5 @@ let dataD = [
 drawBarChart(dataD, optionsD, "main-container" );
 
 let optionsE = {};
-let dataE = [100, 45, 23, 87, 92];
-drawBarChart(dataE, "main-container");
+let dataE = [{value:[10, 15, 18], label:"barA"}, {value:[8, 5, 13], label:"barB"}];
+drawBarChart(dataE, "main-container");[]
