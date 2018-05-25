@@ -14,7 +14,7 @@ drawBarChart(data, options, element)
 ```
 
 #### data
-- *Type: Array* - Each element represents a data value or array of values to be rendered as a single bar. Each element can be labelled and assigned it's own color.
+- *Type: Array* - Each element represents a data value or array of values to be rendered as a single bar. Each element can be labelled and assigned it's own color.  The data type of the elements will determine what type of graph is rendered.
   - Unstacked bar graph with no labels and no per-bar color assignments: `data = [1, 2, 3, 4]`
 
   - Stacked bar graph with no labels and no per-bar color assignments: `data = [[1, 2, 3], [4, 5, 6], [7, 8, 9]]`
@@ -27,8 +27,6 @@ drawBarChart(data, options, element)
 
 #### options
 - *Type: Object* - An object representing configuration options for the graph.  If no options argument is supplied, the graph will be rendered using a default configuration.
-  - `options.graphType` *String ( "bar" | "stacked" )*
-
   - `options.width` *Number*
 
   - `options.height` *Number*
@@ -60,7 +58,6 @@ drawBarChart(data, options, element)
 
 ## Bugs
   - Setting `options.barSpacing` to a value greater than the width of the bars will prevent the bars from rendering properly
-  - Currently no code checking whether users pass in `data` that matches up with `options.graphType`
   - `options.stackedBarLegend` renders the legend outside of the container defined by `options.height, options.width`
 
 ## Roadmap
