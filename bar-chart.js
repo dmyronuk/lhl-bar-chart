@@ -3,7 +3,7 @@ let loadOptions = (graphType, options, data, dataClass) => {
     width:500,
     height:500,
     backgroundColor:"#dddddd",
-    title:"Graph Title",
+    title:null,
     titleFontSize:35,
     titleColor:"black",
     barSpacing:15,
@@ -51,10 +51,14 @@ let createContainer = (element, width, height, backgroundColor) => {
 }
 
 let createTitle = (element, title, titleFontSize, titleColor) => {
-  let titleDiv = $(`<div>${title}</div>`);
-  titleDiv.css("fontSize", titleFontSize+"px");
-  titleDiv.css("color", titleColor);
-  titleDiv.addClass("chart-title");
+  let titleDiv = $("<div/>").addClass("chart-title");
+  if(title){
+    titleDiv.text(title)
+    titleDiv.css("fontSize", titleFontSize+"px");
+    titleDiv.css("color", titleColor);
+  }else{
+    titleDiv.css("height", titleFontSize)
+  }
   $("#"+element).append(titleDiv);
 }
 
@@ -74,7 +78,9 @@ let createChartInner = (element) => {
 
   //create axes
   let axes = $("<div></div>").addClass("axes");
-  let margin = width * 0.12;
+  let margin = width * 0.14;
+  if(margin > 60) margin = 60;
+  console.log("margin: ", margin);
   axes.css("margin", `0px ${margin}px ${margin}px ${margin}px`)
   chartInner.append(axes)
 }
@@ -100,14 +106,12 @@ let createTicks = (containerId, maxVal, tickInterval, displayGrid) => {
   let tickHeight = maxHeight * tickInterval / maxVal;
   let curHeight = tickHeight;
 
-
-  console.log("container margin", parseFloat(axes.css("margin-left").slice(0, -2)));
   let margin = parseFloat(axes.css("margin-left").slice(0, -2));
   let tickContainer = $("<div/>").addClass("tick-container");
   tickContainer.css("height", axisHeight);
   tickContainer.css("width", margin);
   container.find(".chart-inner").prepend(tickContainer);
-  let fontSize = getFontSize(tickContainer, 0.20, 11);
+  let fontSize = getFontSize(tickContainer, 0.21, 11);
 
   while(curHeight < axisHeight){
     let tickLabel = $("<div/>").addClass("tick-label");

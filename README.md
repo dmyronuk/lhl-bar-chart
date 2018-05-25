@@ -41,7 +41,7 @@ drawBarChart(data, options, element)
 
   - `options.barColor` *String* - Applies to unstacked graphs.  Sets the color of every bar in the graph.  If per-bar colors are specified by the `data` arg, they will override this option.
 
-  - `options.stackedBarColors` *Array* - Applies to stacked graphs.  Each element of the array is a string representing a stacked bar color.  The 0th element is the bottom color and the last element is the top color.  If this option is not set, colors will be randomly assigned.  Similarly, if not enough colors are supplied, i.e. each stacked bar has 4 data values but only 3 colors are specified, then the 4th color will be randomly assigned.
+  - `options.stackedBarColors` *Array* - Applies to stacked graphs.  Each element of the array is a string representing a stacked bar color.  The 0<sup>th</sup> element is the bottom color and the last element is the top color.  If this option is not set, colors will be randomly assigned.  Similarly, if not enough colors are supplied, i.e. each stacked bar has 4 data values but only 3 colors are specified, then the 4th color will be randomly assigned.
 
   - `options.stackedBarLegend` *null | Array* - Applies to stacked graphs.  Appends a legend below the graph container that maps stacked bar colors to a label.  Each element of the array is a string that is matched with a color.  The n<sup>th</sup> element of the array matches with the n<sup>th</sup> element of `stackedBarColors`.
 
@@ -64,7 +64,9 @@ drawBarChart(data, options, element)
 
 ## Resources
 * [Color-Hex](www.color-hex.com)
-* [CSS-Tricks Flexbox Guide](https://css-tricks.com/snippets/css/a-guide-to-flexbox/)
+* [CSS-Tricks](https://css-tricks.com/snippets/css/a-guide-to-flexbox/) - Flexbox Guide
+* [CSS-Tricks](https://css-tricks.com/viewport-sized-typography/) - Viewport Sized Typography
+* [w3schools](https://www.w3schools.com/cssref/css3_pr_transform.asp) - Transform Property
 * [Markdown Live Preview](http://markdownlivepreview.com/)
 * [Awesome-Computer-Vision](https://github.com/jbhuang0604/awesome-computer-vision/blob/master/README.md) - Markdown example
 * [Mozilla Web Docs](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/Reduce) - Array.prototype.reduce()

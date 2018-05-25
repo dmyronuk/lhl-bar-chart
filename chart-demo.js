@@ -1,16 +1,19 @@
 let optionsA = {
-  width:600,
-  height:400,
+  width:300,
+  height:300,
+  backgroundColor:"lightblue",
   title:"Graph A",
-  titleFontSize:30,
-  titleColor:"red",
+  titleFontSize:20,
+  titleColor:"black",
   barSpacing:10,
   barColor:"blue",
-  displayBarOutlines:true,
+  displayBarOutlines:false,
   barValPosition:"center",
   barValColor:"white",
+  yAxisLabel:"Total Daily Sales",
+  yAxisUnits:"$"
 };
-let dataA = [300, 90, 1005, 450, 627];
+let dataA = [30000, 90000, 100500, 45000, 62700];
 drawBarChart(dataA, optionsA, "main-container" );
 
 let optionsB = {
@@ -51,8 +54,8 @@ let dataC = [
 drawBarChart(dataC, optionsC, "main-container" );
 
 let optionsD = {
-  width:400,
-  height:600,
+  width:300,
+  height:500,
   title:"Graph D",
   titleFontSize:35,
   titleColor:"darkblue",
