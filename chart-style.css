@@ -1,7 +1,6 @@
 html, body {
   margin:0px;
   box-sizing:border-box;
-  font-family:Arial;
 }
 
 #top-bar{
@@ -24,7 +23,6 @@ html, body {
 
 .chart-container{
   box-sizing:border-box;
-  font-family:Arial;
   margin:30px 0px 0px 0px;
 }
 
@@ -90,7 +88,6 @@ html, body {
   position:absolute;
   margin-left:2px;
   text-align: center;
-  font-size:0.9vw;
   left:0px;
   bottom:0px;
   transform-origin:top left;

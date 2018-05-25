@@ -3,6 +3,8 @@ let loadOptions = (graphType, options, data, dataClass) => {
     width:500,
     height:500,
     backgroundColor:"#dddddd",
+    baseFont:"Arial",
+    titleFont:"Arial",
     title:null,
     titleFontSize:35,
     titleColor:"black",
@@ -37,10 +39,11 @@ let loadOptions = (graphType, options, data, dataClass) => {
   return options;
 }
 
-let createContainer = (element, width, height, backgroundColor) => {
+let createContainer = (element, width, height, backgroundColor, baseFont) => {
   let container = $("<div></div").addClass("chart-container");
   container.css("width", width);
   container.css("height", height);
+  container.css("font-family", baseFont);
   container.css("background-color", backgroundColor);
 
   let chartNum = $("#"+element).children(".chart-container").length;
@@ -50,10 +53,12 @@ let createContainer = (element, width, height, backgroundColor) => {
   return containerId;
 }
 
-let createTitle = (element, title, titleFontSize, titleColor) => {
+let createTitle = (element, title, titleFont, titleFontSize, titleColor) => {
   let titleDiv = $("<div/>").addClass("chart-title");
   if(title){
     titleDiv.text(title)
+    console.log(titleFont)
+    titleDiv.css("font-family", titleFont);
     titleDiv.css("fontSize", titleFontSize+"px");
     titleDiv.css("color", titleColor);
   }else{
@@ -192,7 +197,7 @@ let getRandomColor = () => {
 limitingElem is a jQuery object
 */
 let getFontSize = (limitingElem, ratio, maxSize) => {
-  let fontSize = limitingElem.innerWidth() * ratio;
+  let fontSize = Math.round(limitingElem.innerWidth() * ratio);
   if(fontSize > maxSize) fontSize = maxSize;
   return fontSize
 }
@@ -279,8 +284,11 @@ let appendBarValueLabel = (barValPosition, barValColor, barValue, parentBar) => 
 
 let appendBarLabel = (barLabel, parentBar, barLabelColor, graphType) => {
   let barLabelDiv = $("<div/>").addClass("bar-label");
+  let fontSize = getFontSize(parentBar, 0.3, 15);
+  barLabelDiv.css("font-size", fontSize);
   barLabelDiv.css("color", barLabelColor);
   barLabelDiv.text(barLabel);
+
 
   if(graphType === "stacked"){
     parentBar.css("position", "relative");
@@ -302,6 +310,7 @@ let createYAxisLabel = (containerId, yAxisLabel, yAxisUnits) => {
   let yHeight = tickContainerLeft.css("height");
   let yLabel = $("<div/>").addClass("y-label");
   yLabel.css("width", yHeight);
+  yLabel.css("font-size", tickContainerLeft.width() * 0.7)
   let text = (yAxisUnits) ? `${yAxisLabel} \(${yAxisUnits}\)` : yAxisLabel ;
   yLabel.text(text);
   $(tickContainerLeft).prepend(yLabel);
@@ -346,8 +355,8 @@ let drawBarChart = (data, options, element) => {
 
   let graphType = getGraphType(data, dataClass);
   options = loadOptions(graphType, options, data, dataClass); //substitutes default options for undefined params
-  let containerId = createContainer(element, options.width, options.height, options.backgroundColor);
-  createTitle(containerId, options.title, options.titleFontSize, options.titleColor);
+  let containerId = createContainer(element, options.width, options.height, options.backgroundColor, options.baseFont);
+  createTitle(containerId, options.title, options.titleFont, options.titleFontSize, options.titleColor);
   createChartInner(containerId, options.yAxisLabel);
 
   let maxVal = getMaxVal(data, dataClass, graphType);
