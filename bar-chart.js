@@ -62,7 +62,7 @@ let createTitle = (element, title, titleFontSize, titleColor) => {
   $("#"+element).append(titleDiv);
 }
 
-let createChartInner = (element) => {
+let createChartInner = (element, yAxisLabel) => {
   let container = $("#" + element);
   let titleDiv = container.children(".chart-title")[0];
 
@@ -80,7 +80,6 @@ let createChartInner = (element) => {
   let axes = $("<div></div>").addClass("axes");
   let margin = width * 0.14;
   if(margin > 60) margin = 60;
-  console.log("margin: ", margin);
   axes.css("margin", `0px ${margin}px ${margin}px ${margin}px`)
   chartInner.append(axes)
 }
@@ -96,7 +95,7 @@ let getTickInterval = (maxVal) => {
   return tickInterval;
 }
 
-let createTicks = (containerId, maxVal, tickInterval, displayGrid) => {
+let createTicks = (containerId, maxVal, tickInterval, displayGrid, yAxisLabel) => {
   let container = $("#" + containerId);
   let axes = container.find(".axes");
   let axisHeight = axes.innerHeight();
@@ -108,21 +107,31 @@ let createTicks = (containerId, maxVal, tickInterval, displayGrid) => {
 
   let margin = parseFloat(axes.css("margin-left").slice(0, -2));
   let tickContainer = $("<div/>").addClass("tick-container");
+  let tickContainerLeft = $("<div/>").addClass("tick-container-left"); // left container will hold the y-axis title
+  let tickContainerRight = $("<div/>").addClass("tick-container-right"); // right container will hold the ticks and labels
+  if(yAxisLabel){
+    tickContainerLeft.css("width", "30%");
+    tickContainerRight.css("width", "70%");
+  }
+
   tickContainer.css("height", axisHeight);
   tickContainer.css("width", margin);
+  tickContainer.append([tickContainerLeft, tickContainerRight]);
   container.find(".chart-inner").prepend(tickContainer);
+
   let fontSize = getFontSize(tickContainer, 0.21, 11);
+  if(yAxisLabel && maxVal > 100) fontSize *= 0.8;
 
   while(curHeight < axisHeight){
     let tickLabel = $("<div/>").addClass("tick-label");
     tickLabel.css("bottom", curHeight);
     tickLabel.css("font-size", fontSize);
     tickLabel.text(`${curTickVal}`);
-    tickContainer.append(tickLabel);
+    tickContainerRight.append(tickLabel);
 
     let tick = $("<div/>").addClass("tick");
     tick.css("bottom", curHeight);
-    tickContainer.append(tick);
+    tickContainerRight.append(tick);
 
     if(displayGrid){
       let gridLine = $("<div/>").addClass("grid-line");
@@ -135,6 +144,7 @@ let createTicks = (containerId, maxVal, tickInterval, displayGrid) => {
     curTickVal += tickInterval;
     curHeight += tickHeight;
   }
+  tickContainerRight.find(".tickLabel").css("fontSize", fontSize);
 }
 
 /* data arg can be either an array of objects (labelled values), an array of subarrays (stacked graph) or an array of ints
@@ -288,12 +298,13 @@ let addOutlines = (containerId, width) => {
 }
 
 let createYAxisLabel = (containerId, yAxisLabel, yAxisUnits) => {
-  let axes = $("#" + containerId).find(".axes");
-  let yHeight = axes.css("height");
+  let tickContainerLeft = $("#" + containerId).find(".tick-container-left");
+  let yHeight = tickContainerLeft.css("height");
   let yLabel = $("<div/>").addClass("y-label");
   yLabel.css("width", yHeight);
-  yLabel.html(`${yAxisLabel} \(${yAxisUnits}\)`);
-  $(axes).append(yLabel);
+  let text = (yAxisUnits) ? `${yAxisLabel} \(${yAxisUnits}\)` : yAxisLabel ;
+  yLabel.text(text);
+  $(tickContainerLeft).prepend(yLabel);
 }
 
 //Legend for stacked bar graph colors
@@ -337,11 +348,11 @@ let drawBarChart = (data, options, element) => {
   options = loadOptions(graphType, options, data, dataClass); //substitutes default options for undefined params
   let containerId = createContainer(element, options.width, options.height, options.backgroundColor);
   createTitle(containerId, options.title, options.titleFontSize, options.titleColor);
-  createChartInner(containerId);
+  createChartInner(containerId, options.yAxisLabel);
 
   let maxVal = getMaxVal(data, dataClass, graphType);
   let tickInterval = getTickInterval(maxVal);
-  createTicks(containerId, maxVal, tickInterval, options.displayGrid);
+  createTicks(containerId, maxVal, tickInterval, options.displayGrid, options.yAxisLabel);
 
   renderData(data, graphType, options, containerId, dataClass, maxVal);
   if(options.yAxisLabel) createYAxisLabel(containerId, options.yAxisLabel, options.yAxisUnits);

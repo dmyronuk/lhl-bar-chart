@@ -54,6 +54,18 @@ html, body {
   z-index:100;
 }
 
+.tick-container-left{
+  display:inline-block;
+  height:100%;
+  width:0%;
+}
+
+.tick-container-right{
+  display:inline-block;
+  height:100%;
+  width:100%;
+}
+
 .tick{
   height:2px;
   width:10px;
@@ -76,10 +88,11 @@ html, body {
 
 .y-label{
   position:absolute;
+  margin-left:2px;
   text-align: center;
-  font-size:.7vw;
-  background:yellow;
-  left:-60px; /* probably don't want this hardcoded - may overlap y-ticks */
+  font-size:0.9vw;
+  left:0px;
+  bottom:0px;
   transform-origin:top left;
   transform:rotate(-90deg);
   z-index:200;

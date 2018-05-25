@@ -1,5 +1,5 @@
 let optionsA = {
-  width:300,
+  width:400,
   height:300,
   backgroundColor:"lightblue",
   title:"Graph A",
@@ -13,7 +13,7 @@ let optionsA = {
   yAxisLabel:"Total Daily Sales",
   yAxisUnits:"$"
 };
-let dataA = [30000, 90000, 100500, 45000, 62700];
+let dataA = [3000, 9000, 10050, 4500, 6270];
 drawBarChart(dataA, optionsA, "main-container" );
 
 let optionsB = {
@@ -29,6 +29,7 @@ let optionsB = {
   stackedBarLegend:["Legend A", "Legend B", "Legend C", "Legend D"],
   stackedBarColors:["red", "orange", "yellow", "blue"],
   displayGrid:false,
+  yAxisLabel:"Total Daily Sales",
 };
 let dataB = [[2,6,4,2], [3,1,2,2], [5,3,2,5], [4,4,7,3]];
 drawBarChart(dataB, optionsB, "main-container" );
@@ -66,6 +67,7 @@ let optionsD = {
   stackedBarLegend:["Legend A", "Legend B", "Legend C", "Legend D"],
   stackedBarColors:["#3b4274", "#62678f", "#b0b3c7", "#c4c6d5"],
   displayGrid:false,
+  yAxisLabel:"Total Daily Sales",
 };
 let dataD = [
   {value:[2,6,4,2], color:"red", label:"Stack A"},
