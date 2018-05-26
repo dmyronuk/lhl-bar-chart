@@ -2,7 +2,7 @@ let loadOptions = (graphType, options, data, dataClass) => {
   let defaultOptions = {
     width:500,
     height:500,
-    backgroundColor:"#dddddd",
+    backgroundColor:"#eeeeee",
     baseFont:"Arial",
     titleFont:"Arial",
     title:null,
@@ -284,7 +284,7 @@ let appendBarValueLabel = (barValPosition, barValColor, barValue, parentBar) => 
 
 let appendBarLabel = (barLabel, parentBar, barLabelColor, graphType) => {
   let barLabelDiv = $("<div/>").addClass("bar-label");
-  let fontSize = getFontSize(parentBar, 0.3, 15);
+  let fontSize = getFontSize(parentBar, 0.34, 15);
   barLabelDiv.css("font-size", fontSize);
   barLabelDiv.css("color", barLabelColor);
   barLabelDiv.text(barLabel);
@@ -300,9 +300,13 @@ let appendBarLabel = (barLabel, parentBar, barLabelColor, graphType) => {
   parentBar.append(barLabelDiv);
 }
 
-let addOutlines = (containerId, width) => {
+//Tried setting outline on parent div but it was applied to child elements like bar-labels & bar-vals, even if they're outside the container
+let addOutlines = (containerId) => {
+  console.log("running")
   let bars = $("#" + containerId).find(".bar");
-  $(bars).css("outline", "solid black 2px");
+  let outlineDiv = $("<div/>").addClass("bar-outline");
+  $(outlineDiv).css("outline", "solid black 2px");
+  bars.append(outlineDiv);
 }
 
 let createYAxisLabel = (containerId, yAxisLabel, yAxisUnits) => {
@@ -365,7 +369,7 @@ let drawBarChart = (data, options, element) => {
 
   renderData(data, graphType, options, containerId, dataClass, maxVal);
   if(options.yAxisLabel) createYAxisLabel(containerId, options.yAxisLabel, options.yAxisUnits);
-  if(options.displayBarOutlines) addOutlines(containerId, options.barOutlineWidth);
+  if(options.displayBarOutlines) addOutlines(containerId);
 
   if(graphType === "stacked" && options.stackedBarLegend){
     appendLegend(options.stackedBarLegend, options.stackedBarColors, containerId);

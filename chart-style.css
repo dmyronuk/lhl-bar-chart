@@ -1,29 +1,5 @@
-html, body {
-  margin:0px;
-  box-sizing:border-box;
-}
-
-#top-bar{
-  width:100%;
-  padding:10px 0px 10px 0px;
-  background:black;
-  color:white;
-  font-size:25px;
-  display:flex;
-  flex-direction:row;
-  justify-content:center;
-}
-
-#main-container{
-  width:100%;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-}
-
 .chart-container{
   box-sizing:border-box;
-  margin:30px 0px 0px 0px;
 }
 
 .chart-title{
@@ -104,17 +80,25 @@ html, body {
   font-size:0.5vw;
 }
 
+.bar-outline{
+  position:absolute;
+  height:100%;
+  width:100%;
+  bottom:0px;
+}
+
 .bar-label{
   font-size:14px;
   text-align:center;
   position:relative;
-  bottom:calc(-100%);
+  bottom:calc(-100% - 5px);
 }
 
 .bar-value-label{
   width:100%;
   text-align:center;
   position:relative;
+  z-index:100;
 }
 
 .legend{
@@ -123,7 +107,6 @@ html, body {
   flex-direction:row;
   align-items:center;
   justify-content:center;
-  background:pink;
 }
 
 .legend-color-box{
