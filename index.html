@@ -3,8 +3,11 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <title>Lighthouse Labs Prep | Bar Graph</title>
+    <title>Lighthouse Labs Prep | Bar Chart Generator </title>
+    <link type="text/css" rel="stylesheet" href="page-style.css">
     <link type="text/css" rel="stylesheet" href="chart-style.css">
+    <link href="https://fonts.googleapis.com/css?family=Graduate" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Graduate|Playfair+Display+SC" rel="stylesheet">
     <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script type="text/javascript" src="bar-chart.js"></script>
   </head>
@@ -12,13 +15,32 @@
   <body>
     <div id="top-bar">
       <div>
-        Bar Charts
+        Bar Chart Generator
       </div>
     </div>
 
     <div id="main-container">
+      <div id="main-container-mid">
+        <div class="flex-row">
+          <div id="C1" class="sub-container"></div>
+          <div id="C2" class="sub-container"></div>
+          <div id="C3" class="sub-container"></div>
+        </div>
 
+        <div class="flex-row">
+          <div id="C4" class="sub-container"></div>
+          <div id="C5" class="sub-container"></div>
+        </div>
+
+        <div class="flex-row">
+          <div id="C6" class="sub-container"></div>
+          <div id="C7" class="sub-container"></div>
+        </div>
+
+      </div>
     </div>
+
+    <div id="footer"></div>
   </body>
-  <script type="text/javascript" src="chart-demo.js"></script>
+  <script type="text/javascript" src="chart-demo-b.js"></script>
 </html>
