@@ -17,18 +17,18 @@ Embed bar-chart.js and chart-style.css into an html document, then use the api b
 drawBarChart(data, options, element)
 ```
 
-#### data
+### data
 *Type: Array* - Each element represents a data value or array of values to be rendered as a single bar. Each bar can be labelled and assigned it's own color.  The data type of the elements will determine what type of graph is rendered.
 
 | Type | Example | Graph Type Rendered |
 | :--- | :--- | :--- |
-| *Number* | ```javascript data = [1, 2, 3, 4]``` | Unstacked bar graph with no labels and no per-bar color assignments |
-| *Array* | ```javascript data = [[1, 2, 3], [4, 5, 6], [7, 8, 9]]``` | Stacked bar graph with no labels and no per-bar color assignments |
-| *Object*| ```javascript data = [{value : 10, color : "red", label: "apples"}, {value: 5, color: "yellow", label:"bananas"}]``` | Unstacked bar graph with labels or per-bar color assignments|
-| *Object*| ```javascript data = [{value : [1, 2, 3], color : "black", label: "Monday"}, {value: [4, 5, 6], color: "blue", label:"Tuesday"}]``` | Stacked bar graph with labels or per-bar color assignments |
+| *Number* | ```data = [1, 2, 3, 4]``` | Unstacked bar graph with no labels and no per-bar color assignments |
+| *Array* | ```data = [[1, 2, 3], [4, 5, 6], [7, 8, 9]]``` | Stacked bar graph with no labels and no per-bar color assignments |
+| *Object*| ```data = [{value : 10, color : "red", label: "apples"}, {value: 5, color: "yellow", label:"bananas"}]``` | Unstacked bar graph with labels or per-bar color assignments|
+| *Object*| ```data = [{value : [1, 2, 3], color : "black", label: "Monday"}, {value: [4, 5, 6], color: "blue", label:"Tuesday"}]``` | Stacked bar graph with labels or per-bar color assignments |
 
 
-#### options
+### options
 *Type: Object* - An object representing configuration options for the graph.  If no options argument is supplied, the graph will be rendered using a default configuration.
 
 | Parameter | Type | Default Value |  Description |
@@ -37,7 +37,7 @@ drawBarChart(data, options, element)
 | `options.height` | *Number* | 500 | Height of the rendered chart in pixels |
 | `options.backgroundColor` | *String* | #eeeeee | Background color of the chart container |
 | `options.baseFont` | *String* | Arial | Font-family of the chart |
-| `options.baseFontColor` | *String* | "black" | CSS color property of the chart |
+| `options.baseFontColor` | *String* | black | CSS color property of the chart |
 | `options.title` | *String* | null | Optional title string inserted above chart |
 | `options.titleFont` | *String* | Arial | CSS font-family of title |
 | `options.titleFontSize` | *Number* | 35 | CSS font-size of title |
@@ -54,10 +54,10 @@ drawBarChart(data, options, element)
 | `options.barValColor` | *String* | null | Applies when `barValPosition !== null`.  Sets the font color of the displayed numeric value of each bar.  If this value is not set then bar values will revert to `options.baseFontColor` |
 | `displayValCommas` | *Bool* | false | Applies when `barValPosition !== null`.  Formats the displayed bar value so that every third digit is separated by a comma. |
 | `options.barLabelColor` | *String* | null | Applies font color if labels are passed into the `data` argument |
-| `options.tickDecimalPlaces` | *Number* | 1 | Specifies the decimal place that the y-axis tick values will be rounded to.  By default, y-ticks are rounded to 0 decimal places if the base tick is greater than one, or 1 decimal place if the base tick is less than one. |
+| `options.tickDecimalPlaces` | *Number* | 0 | Specifies the decimal place that the y-axis tick values will be rounded to.  By default, y-ticks are rounded to 0 decimal places if the base tick is greater than one, or 1 decimal place if the base tick is less than one. |
 
-#### element
-*Type: String* - A string representing the DOM element.id of the container the graph will be rendered to.
+### element
+*Type: String* - A string representing the DOM element.id of the container the graph will be rendered to
 
 ## Bugs
   - Negative y-values are currently unsupported and will render as bars with 0 height
