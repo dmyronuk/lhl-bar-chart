@@ -67,6 +67,7 @@ $(document).ready(() => {
     title:"Sedan Price Comparison",
     barSpacing:18,
     barValPosition:"center",
+    displayValCommas:true,
     baseFontColor:"#223333",
     barValColor:"white",
     yAxisLabel:"Base Price",

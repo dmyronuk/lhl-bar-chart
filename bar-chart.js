@@ -99,7 +99,10 @@ let getTickInterval = (maxVal, tickDecimalPlaces) => {
   if(multiple <= 2){tickInterval /= 5}
   else if(multiple <= 5){tickInterval /= 2};
 
+if(tickInterval < 1){
+  if(tickDecimalPlaces < 1) throw "Error: options.tickDecimalPlaces must be equal to or greater than 1";
   tickInterval = parseFloat((tickInterval).toFixed(tickDecimalPlaces)); //round
+}
   return tickInterval;
 }
 
@@ -289,7 +292,6 @@ let addCommas = (integer) => {
 }
 
 let appendBarValueLabel = (barValPosition, barValColor, barValue, displayValCommas, parentBar) => {
-  console.log("display commas?: ", displayValCommas)
   let barLabelDiv = $("<div/>").addClass("bar-value-label");
   if(displayValCommas) barValue = addCommas(barValue);
   barLabelDiv.text(barValue);
@@ -385,9 +387,15 @@ let drawBarChart = (data, options, element) => {
   createChartInner(containerId, options.yAxisLabel);
 
   let maxVal = getMaxVal(data, dataClass, graphType);
-  let tickInterval = getTickInterval(maxVal, options.tickDecimalPlaces);
-  createTicks(containerId, maxVal, tickInterval, options.displayGrid, options.yAxisLabel, options.tickDecimalPlaces);
+  let tickInterval;
 
+  try{
+    tickInterval = getTickInterval(maxVal, options.tickDecimalPlaces);
+  }catch(e){
+    return e;
+  }
+
+  createTicks(containerId, maxVal, tickInterval, options.displayGrid, options.yAxisLabel, options.tickDecimalPlaces);
   renderData(data, graphType, options, containerId, dataClass, maxVal);
   if(options.yAxisLabel) createYAxisLabel(containerId, options.yAxisLabel, options.yAxisUnits);
   if(options.displayBarOutlines) addOutlines(containerId);
