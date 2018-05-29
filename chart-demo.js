@@ -30,7 +30,7 @@ let options2 = {
   barValPosition:"top",
   barSpacing:15,
   barValColor:"blue",
-  barLabelColor:"blue",
+  barLabelColor:"green",
   displayBarOutlines:true,
   yAxisLabel:"Percent",
   yAxisUnits:("%"),
@@ -48,38 +48,55 @@ let data2 = [
 drawBarChart(data2, options2, "C2" );
 
 let options3 = {
-  width:500,
-  height:500,
-  title:"Graph B",
-  titleFontSize:35,
-  titleColor:"darkblue",
-  barSpacing:15,
+  width:525,
+  height:450,
+  title:"Daily Power Consumption",
+  titleFontSize:27,
+  titleColor:"black",
+  barSpacing:20,
   displayBarOutlines:true,
   barValPosition:"center",
-  barValColor:"white",
-  stackedBarLegend:["Legend A", "Legend B", "Legend C", "Legend D"],
-  stackedBarColors:["red", "orange", "yellow", "blue"],
+  barValColor:"black",
+  stackedBarLegend:["Air Conditioning", "Lighting", "Appliances", "Misc", ],
+  stackedBarColors:["blue", "#e6e600", "orange",  "red"],
   displayGrid:false,
-  yAxisLabel:"Total Daily Sales",
+  yAxisLabel:"Power",
+  yAxisUnits:"kWh"
 };
-let data3 = [[2,6,4,2], [3,1,2,2], [5,3,2,5], [4,4,7,3], [3,6,1,1]];
+let data3 = [
+  {value:[8,3,2,2], label:"Mon"},
+  {value:[7,2,4,1], label:"Tues"},
+  {value:[6,3,5,2], label:"Wed"},
+  {value:[6,2,3,1], label:"Thurs"},
+  {value:[4,4,4,3], label:"Fri"},
+  ];
 drawBarChart(data3, options3, "C3" );
 
 
 let options4 = {
-  width:300,
-  height:500,
-  title:"Graph D",
-  titleFontSize:35,
-  titleColor:"darkblue",
+  width:525,
+  height:450,
+  title:"Sales By Product Category",
+  titleFontSize:27,
+  titleColor:"black",
   displayGrid:true,
   barSpacing:15,
   barColor:"blue",
   barValColor:"white",
+  stackedBarLegend:["Category A", "Category B", "Category C", "Category D"],
   stackedBarColors:["#3b4274", "#62678f", "#b0b3c7", "#c4c6d5"],
-  yAxisLabel:"Total Daily Sales",
+  yAxisLabel:"Units Sold",
 };
-let data4 = [[2,6,4,2], [3,1,2,2], [5,3,2,5], [4,4,7,3]];
+let data4 = [
+  {value:[22,43,35,29], label:"Jan"},
+  {value:[31,18,67,46], label:"Feb"},
+  {value:[51,35,44,52], label:"Mar"},
+  {value:[25, 42, 38, 82], label:"Apr"},
+  {value:[47,42, 45,31], label:"May"},
+  {value:[27,32,65,21], label:"June"},
+  {value:[37,22,45,11], label:"July"},
+  {value:[46,27,50,13], label:"Aug"},
+  ];
 drawBarChart(data4, options4, "C4" );
 
 let options5 = {};
