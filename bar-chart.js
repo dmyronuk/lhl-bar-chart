@@ -1,30 +1,34 @@
+let getRandomColor = () => {
+  return `rgb(${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)})`;
+};
+
 let loadOptions = (graphType, options, data, dataClass) => {
   let defaultOptions = {
-    width:500,
-    height:500,
-    backgroundColor:"#eeeeee",
-    baseFont:"Arial",
-    baseFontColor:"black",
-    title:null,
-    titleFont:"Arial",
-    titleFontSize:35,
-    titleColor:"black",
-    barSpacing:15,
-    barColor:"red",
-    displayBarOutlines:false,
-    stackedBarColors:[],
-    stackedBarLegend:null,
-    barValPosition:null,
-    barValColor:null,
-    displayValCommas:false,
-    barLabelColor:null,
-    yAxisLabel:null,
-    yAxisUnits:null,
-    tickDecimalPlaces:0,
-    displayGrid:true,
+    "backgroundColor": "#eeeeee",
+    "barColor": "red",
+    "barLabelColor": null,
+    "barSpacing": 15,
+    "barValColor": null,
+    "barValPosition": null,
+    "baseFont": "Arial",
+    "baseFontColor": "black",
+    "displayBarOutlines": false,
+    "displayGrid": true,
+    "displayValCommas": false,
+    "height": 500,
+    "stackedBarColors": [],
+    "stackedBarLegend": null,
+    "tickDecimalPlaces": 0,
+    "title": null,
+    "titleColor": "black",
+    "titleFont": "Arial",
+    "titleFontSize": 35,
+    "width": 500,
+    "yAxisLabel": null,
+    "yAxisUnits": null
   };
 
-  for(key in defaultOptions){
+  for(let key in defaultOptions){
     if(options[key] === undefined){
       options[key] = defaultOptions[key];
     }
@@ -32,15 +36,16 @@ let loadOptions = (graphType, options, data, dataClass) => {
 
   //assign random colors if graph is stacked and user does not pass enough values into stackedBarColors array
   if(graphType === "stacked"){
-    let numStacked; //each stack is composed of how many bars?
-    (dataClass === "Object") ? numStacked = data[0].value.length : numStacked = data[0].length;
+    //each stack is composed of how many bars?
+    let numStacked = dataClass === "Object" ? data[0].value.length : data[0].length;
     while(options.stackedBarColors.length < numStacked){
       let randColor = getRandomColor();
       options.stackedBarColors.push(randColor);
     }
   }
+
   return options;
-}
+};
 
 let createContainer = (element, width, height, backgroundColor, baseFont, baseFontColor) => {
   let container = $("<div></div").addClass("chart-container");
@@ -55,22 +60,22 @@ let createContainer = (element, width, height, backgroundColor, baseFont, baseFo
   container.attr("id", containerId);
   $("#" + element).append(container);
   return containerId;
-}
+};
 
 let createTitle = (element, title, titleFont, titleFontSize, titleColor) => {
   let titleDiv = $("<div/>").addClass("chart-title");
   if(title){
-    titleDiv.text(title)
+    titleDiv.text(title);
     titleDiv.css("font-family", titleFont);
     titleDiv.css("fontSize", titleFontSize+"px");
     titleDiv.css("color", titleColor);
   }else{
-    titleDiv.css("height", titleFontSize)
+    titleDiv.css("height", titleFontSize);
   }
   $("#"+element).append(titleDiv);
-}
+};
 
-let createChartInner = (element, yAxisLabel) => {
+let createChartInner = (element) => {
   let container = $("#" + element);
   let titleDiv = container.children(".chart-title")[0];
 
@@ -88,23 +93,26 @@ let createChartInner = (element, yAxisLabel) => {
   let axes = $("<div></div>").addClass("axes");
   let margin = width * 0.14;
   if(margin > 60) margin = 60;
-  axes.css("margin", `0px ${margin}px ${margin}px ${margin}px`)
-  chartInner.append(axes)
-}
+  axes.css("margin", `0px ${margin}px ${margin}px ${margin}px`);
+  chartInner.append(axes);
+};
 
 let getTickInterval = (maxVal, tickDecimalPlaces) => {
   let exp = Math.floor(Math.log10(maxVal));
-  let tickInterval = 10 ** exp; // largest power of 10 that's less than our max Val
+  let tickInterval = Math.pow(10, exp); // largest power of 10 that's less than our max Val
   let multiple = maxVal / tickInterval; // number of ticks we get at the current Interval
-  if(multiple <= 2){tickInterval /= 5}
-  else if(multiple <= 5){tickInterval /= 2};
+  if(multiple <= 2){
+    tickInterval /= 5;
+  }else if(multiple <= 5){
+    tickInterval /= 2;
+  }
 
-if(tickInterval < 1){
-  if(tickDecimalPlaces < 1) throw "Error: options.tickDecimalPlaces must be equal to or greater than 1";
-  tickInterval = parseFloat((tickInterval).toFixed(tickDecimalPlaces)); //round
-}
+  if(tickInterval < 1){
+    if(tickDecimalPlaces < 1) throw "Error: options.tickDecimalPlaces must be equal to or greater than 1";
+    tickInterval = parseFloat((tickInterval).toFixed(tickDecimalPlaces)); //round
+  }
   return tickInterval;
-}
+};
 
 let createTicks = (containerId, maxVal, tickInterval, displayGrid, yAxisLabel, tickDecimalPlaces) => {
   let container = $("#" + containerId);
@@ -157,25 +165,25 @@ let createTicks = (containerId, maxVal, tickInterval, displayGrid, yAxisLabel, t
     curHeight += tickHeight;
   }
   tickContainerRight.find(".tickLabel").css("fontSize", fontSize);
-}
+};
 
 /* data arg can be either an array of objects (labelled values), an array of subarrays (stacked graph) or an array of ints
 Fn checks that all values in the data array are of the same class and returns a string representing the class ie "Array"
 obj.constructor.name is only available in ES6 */
 let getDataClass = (data) => {
-  firstElemClass = data[0].constructor.name;
+  let firstElemClass = data[0].constructor.name;
   for(let i=1; i<data.length; i++){
     if(data[i].constructor.name !== firstElemClass){
-      throw "Exception: data values must be instances of the same class"
+      throw "Exception: data values must be instances of the same class";
     }
   }
   return firstElemClass;
-}
+};
 
 let getGraphType = (data, dataClass) => {
   let firstElem = (dataClass === "Object") ? data[0].value : data[0];
   return (firstElem.constructor.name === "Array") ? "stacked" : "bar";
-}
+};
 
 let getMaxVal = (data, dataClass, graphType) => {
   if(dataClass === "Object"){
@@ -191,14 +199,10 @@ let getMaxVal = (data, dataClass, graphType) => {
       let sumB = b.reduce((total, cur) => total + cur);
       if(a > sumB) return a;
       else return sumB;
-      }, 0);
+    }, 0);
     return maxVal;
   }
-}
-
-let getRandomColor = () => {
-  return `rgb(${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)})`
-}
+};
 
 /*Tried setting font-size with 'vw' but had trouble getting the result I wanted - plus this works on browsers that don't support vw
 limitingElem is a jQuery object
@@ -206,8 +210,8 @@ limitingElem is a jQuery object
 let getFontSize = (limitingElem, ratio, maxSize) => {
   let fontSize = Math.round(limitingElem.innerWidth() * ratio);
   if(fontSize > maxSize) fontSize = maxSize;
-  return fontSize
-}
+  return fontSize;
+};
 
 //barWidth is fn of data.length, barHeight is fn of max(data)
 let renderData = (data, graphType, options, element, dataClass, maxVal) => {
@@ -263,10 +267,10 @@ let renderData = (data, graphType, options, element, dataClass, maxVal) => {
     }
     axes.append(curBar);
   }
-}
+};
 
 //height and width args refer to the axes - height is the max height of a bar
-let createBar = (height, width, value, maxVal, barWidth, barSpacing, barColor, barLabel) => {
+let createBar = (height, width, value, maxVal, barWidth, barSpacing, barColor) => {
   let bar = $("<div/>").addClass("bar");
   let barHeight = height * value / maxVal;
   bar.css("margin-left", barSpacing);
@@ -274,11 +278,11 @@ let createBar = (height, width, value, maxVal, barWidth, barSpacing, barColor, b
   bar.css("height", barHeight);
   bar.css("background", barColor);
   return bar;
-}
+};
 
 let addCommas = (integer) => {
-  inString = String(integer);
-  let outString = ""
+  let inString = String(integer);
+  let outString = "";
   let counter = 1;
   for(let i = inString.length - 1; i > 0; i--){
     if((counter) % 3 === 0){
@@ -289,7 +293,7 @@ let addCommas = (integer) => {
     counter ++;
   }
   return inString[0] + outString;
-}
+};
 
 let appendBarValueLabel = (barValPosition, barValColor, barValue, displayValCommas, parentBar) => {
   let barLabelDiv = $("<div/>").addClass("bar-value-label");
@@ -304,7 +308,7 @@ let appendBarValueLabel = (barValPosition, barValColor, barValue, displayValComm
   let fontSize = getFontSize(parentBar, 0.23, 12);
   barLabelDiv.css("font-size", fontSize);
   parentBar.append(barLabelDiv);
-}
+};
 
 let appendBarLabel = (barLabel, parentBar, barLabelColor, graphType) => {
   let barLabelDiv = $("<div/>").addClass("bar-label");
@@ -318,11 +322,11 @@ let appendBarLabel = (barLabel, parentBar, barLabelColor, graphType) => {
     parentBar.css("position", "relative");
     barLabelDiv.css("position", "absolute");
     barLabelDiv.css("width", "100%");
-    barLabelDiv.css("bottom", "-30px")
+    barLabelDiv.css("bottom", "-30px");
   }
 
   parentBar.append(barLabelDiv);
-}
+};
 
 //Tried setting outline on parent div but it was applied to child elements like bar-labels & bar-vals, even if they're outside the container
 let addOutlines = (containerId) => {
@@ -330,23 +334,23 @@ let addOutlines = (containerId) => {
   let outlineDiv = $("<div/>").addClass("bar-outline");
   $(outlineDiv).css("outline", "solid black 2px");
   bars.append(outlineDiv);
-}
+};
 
 let createYAxisLabel = (containerId, yAxisLabel, yAxisUnits) => {
   let tickContainerLeft = $("#" + containerId).find(".tick-container-left");
   let yHeight = tickContainerLeft.css("height");
   let yLabel = $("<div/>").addClass("y-label");
   yLabel.css("width", yHeight);
-  yLabel.css("font-size", tickContainerLeft.width() * 0.68)
-  let text = (yAxisUnits) ? `${yAxisLabel} \(${yAxisUnits}\)` : yAxisLabel ;
+  yLabel.css("font-size", tickContainerLeft.width() * 0.68);
+  let text = (yAxisUnits) ? `${yAxisLabel} (${yAxisUnits})` : yAxisLabel ;
   yLabel.text(text);
   $(tickContainerLeft).prepend(yLabel);
-}
+};
 
 //Legend for stacked bar graph colors
 //Legend renders outside of the container defined by options.height, options.width - may change in future
 let appendLegend = (stackedBarLegend, stackedBarColors, containerId) => {
-  let container = $("#"+containerId)
+  let container = $("#"+containerId);
   let legend = $("<div/>").addClass("legend");
   legend.css("width", container.width());
 
@@ -362,7 +366,7 @@ let appendLegend = (stackedBarLegend, stackedBarColors, containerId) => {
     legend.append(legendItem);
   }
   container.after(legend);
-}
+};
 
 let drawBarChart = (data, options, element) => {
   /*Options arg is optional.  The assignment specifies the args in this order but I would prefer (data, element, options).
@@ -375,9 +379,8 @@ let drawBarChart = (data, options, element) => {
   let dataClass;
   try{
     dataClass = getDataClass(data);
-  }catch(err){
-    console.log(err);
-    return;
+  }catch(e){
+    return e;
   }
 
   let graphType = getGraphType(data, dataClass);
@@ -403,4 +406,4 @@ let drawBarChart = (data, options, element) => {
   if(graphType === "stacked" && options.stackedBarLegend){
     appendLegend(options.stackedBarLegend, options.stackedBarColors, containerId);
   }
-}
+};
