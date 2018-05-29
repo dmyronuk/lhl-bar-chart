@@ -6,7 +6,8 @@ This project is a prep assignment for Lighthouse Labs' Web Development bootcamp.
 ## Features + Screenshots
 
 ![Sample Unstacked Graphs](https://raw.githubusercontent.com/dmyronuk/lhl-bar-chart/master/screenshots/home_cpi_graphs.png)
-![Sample Stacked Graphs](https://raw.githubusercontent.com/dmyronuk/lhl-bar-chart/working/screenshots/power_sales_graphs.png)
+![Sample Stacked Graphs](https://raw.githubusercontent.com/dmyronuk/lhl-bar-chart/master/screenshots/power_sales_graphs.png)
+
 
 
 ## Usage
@@ -33,28 +34,28 @@ drawBarChart(data, options, element)
 
 | Parameter | Type | Default Value |  Description |
 | :--- | :--- | :--- | :--- |
-| `options.width` | *Number* | 500 | Width of the rendered chart in pixels |
-| `options.height` | *Number* | 500 | Height of the rendered chart in pixels |
-| `options.backgroundColor` | *String* | #eeeeee | Background color of the chart container |
-| `options.baseFont` | *String* | Arial | Font-family of the chart |
+| `options.backgroundColor` | *String* | #eeeeee | CSS background color of chart container |
+| `options.barColor` | *String* | red | Applies only to unstacked graphs.  Sets the color of every bar in the graph.  If per-bar colors are specified by the `data` arg, they will override this option. |
+| `options.barLabelColor` | *String* | null | Applies only if labels are passed to the function in the `data` argument.  Sets the CSS color property of the label. |
+| `options.barSpacing` | *Number* | 15 | Space in pixels between chart bars |
+| `options.barValColor` | *String* | null | Applies only if `barValPosition !== null`.  Sets the font color of the displayed numeric value of each bar.  If this value is not set then bar values will revert to `options.baseFontColor` |
+| `options.barValPosition` | *String* | null | Toggles whether the numeric value of each bar will be displayed alongside the bar.  If not null, the string specifies the relative position of the value label. |
+| `options.baseFont` | *String* | Arial | CSS font-family of chart |
 | `options.baseFontColor` | *String* | black | CSS color property of the chart |
-| `options.title` | *String* | null | Optional title string inserted above chart |
+| `options.displayBarOutlines` | *Bool* | false | Toggles CSS outline property of bars |
+| `displayValCommas` | *Bool* | false | Applies only if `barValPosition !== null`.  Formats the displayed bar value so that every third digit is separated by a comma. |
+| `options.displayGrid` | *Bool* | true | Toggles display of chart grid |
+| `options.height` | *Number* | 500 | Height of the rendered chart in pixels |
+| `options.stackedBarColors` | *Array* | [ ] | Applies only to stacked graphs.  Each element of the array is a string representing a stacked bar color.  The 0<sup>th</sup> element is the bottom color and the last element is the top color.  If this option is not set, colors will be randomly assigned.  Similarly, if not enough colors are supplied, i.e. each stacked bar has 4 data values but only 3 colors are specified, then the 4th color will be randomly assigned. |
+| `options.stackedBarLegend` | *Array* | null | Applies only to stacked graphs.  Appends a legend below the graph container that maps stacked bar colors to a label.  Each element of the array is a string that is matched with a color.  The n<sup>th</sup> element of the array matches with the n<sup>th</sup> element of `options.stackedBarColors`. |
+| `options.tickDecimalPlaces` | *Number* | 0 | Specifies the decimal place that the y-axis tick values will be rounded to.  By default, y-ticks are rounded to 0 decimal places if the base tick is greater than one, or 1 decimal place if the base tick is less than one. |
+| `options.title` | *String* | null | Title string inserted above chart |
 | `options.titleFont` | *String* | Arial | CSS font-family of title |
 | `options.titleFontSize` | *Number* | 35 | CSS font-size of title |
 | `options.titleColor` | *Number* | black | CSS color of title |
-| `options.barSpacing` | *Number* | 15 | Space in pixels between chart bars |
+| `options.width` | *Number* | 500 | Width of the rendered chart in pixels |
 | `options.yAxisLabel` | *String* | null | Label string inserted parallel to the y-axis |
 | `options.yAxisUnits` | *String* | null | Unit string inserted parallel to the y-axis |
-| `options.displayBarOutlines` | *Bool* | false | Toggles CSS outline property of bars |
-| `options.displayGrid` | *Bool* | true | Toggles display of chart grid |
-| `options.barColor` | *String* | red | Applies to unstacked graphs.  Sets the color of every bar in the graph.  If per-bar colors are specified by the `data` arg, they will override this option. |
-| `options.stackedBarColors` | *Array* | [ ] | Applies to stacked graphs.  Each element of the array is a string representing a stacked bar color.  The 0<sup>th</sup> element is the bottom color and the last element is the top color.  If this option is not set, colors will be randomly assigned.  Similarly, if not enough colors are supplied, i.e. each stacked bar has 4 data values but only 3 colors are specified, then the 4th color will be randomly assigned. |
-| `options.stackedBarLegend` | *Array* | null | Applies to stacked graphs.  Appends a legend below the graph container that maps stacked bar colors to a label.  Each element of the array is a string that is matched with a color.  The n<sup>th</sup> element of the array matches with the n<sup>th</sup> element of `options.stackedBarColors`. |
-| `options.barValPosition` | *String* | null | Toggles whether or not the numeric value of each bar will be displayed alongside the bar.  If not null, the string specifies the relative position of the value label. |
-| `options.barValColor` | *String* | null | Applies when `barValPosition !== null`.  Sets the font color of the displayed numeric value of each bar.  If this value is not set then bar values will revert to `options.baseFontColor` |
-| `displayValCommas` | *Bool* | false | Applies when `barValPosition !== null`.  Formats the displayed bar value so that every third digit is separated by a comma. |
-| `options.barLabelColor` | *String* | null | Applies font color if labels are passed into the `data` argument |
-| `options.tickDecimalPlaces` | *Number* | 0 | Specifies the decimal place that the y-axis tick values will be rounded to.  By default, y-ticks are rounded to 0 decimal places if the base tick is greater than one, or 1 decimal place if the base tick is less than one. |
 
 ### element
 *Type: String* - A string representing the DOM element.id of the container the graph will be rendered to
