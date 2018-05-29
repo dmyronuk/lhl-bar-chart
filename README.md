@@ -16,29 +16,29 @@ drawBarChart(data, options, element)
 #### data
 - *Type: Array* - Each element represents a data value or array of values to be rendered as a single bar. Each element can be labelled and assigned it's own color.  The data type of the elements will determine what type of graph is rendered.
   - Unstacked bar graph with no labels and no per-bar color assignments: `data = [1, 2, 3, 4]`
-
   - Stacked bar graph with no labels and no per-bar color assignments: `data = [[1, 2, 3], [4, 5, 6], [7, 8, 9]]`
-
   - Unstacked bar graph with labels or per-bar color assignments:
     `data = [{value : 10, color : "red", label: "apples"}, {value: 5, color: "yellow", label:"bananas"}]`
-
   - Stacked bar graph with labels or per-bar color assignments:
     `data = [{value : [1, 2, 3], color : "black", label: "Monday"}, {value: [4, 5, 6], color: "blue", label:"Tuesday"}]`
 
 #### options
 - *Type: Object* - An object representing configuration options for the graph.  If no options argument is supplied, the graph will be rendered using a default configuration.
   - `options.width` *Number*
-
   - `options.height` *Number*
-
+  - `options.backgroundColor` *String*
+  - `options.baseFont` *String*
+  - `options.baseFontColor` *String*
   - `options.title` *String*
-
+  - `options.titleFont` *String*
   - `options.titleFontSize` *Number*
-
   - `options.titleColor` *Number*
-
   - `options.barSpacing` *Number*
-
+  - `options.yAxisLabel` *String*
+  - `options.yAxisUnits` *String*
+  - `options.tickDecimalPlaces` *Number*
+  - `options.displayBarOutlines` *Bool*
+  - `options.displayGrid` *Bool*
   - `options.barColor` *String* - Applies to unstacked graphs.  Sets the color of every bar in the graph.  If per-bar colors are specified by the `data` arg, they will override this option.
 
   - `options.stackedBarColors` *Array* - Applies to stacked graphs.  Each element of the array is a string representing a stacked bar color.  The 0<sup>th</sup> element is the bottom color and the last element is the top color.  If this option is not set, colors will be randomly assigned.  Similarly, if not enough colors are supplied, i.e. each stacked bar has 4 data values but only 3 colors are specified, then the 4th color will be randomly assigned.
@@ -51,28 +51,35 @@ drawBarChart(data, options, element)
 
   - `options.barLabelColor` *String* - Applies font color if labels are passed into the `data` argument.
 
-  - `options.displayGrid` *Bool* - Toggles whether gridlines are displayed perpedicular to the y-axis ticks.
-
 #### element
   - *Type: String* - A string representing the DOM element.id of the container the graph will be rendered to.
 
 ## Bugs
-  - Setting `options.barSpacing` to a value greater than the width of the bars will prevent the bars from rendering properly
-  - `options.stackedBarLegend` renders the legend outside of the container defined by `options.height, options.width`
+  - Negative y-values are currently unsupported and will render as bars with 0 height
+  - Long bar labels will sometimes overflow their containers depending on the width of the bar
+  - By default, the legend for stacked bar graphs renders outside of the container defined by `options.height, options.width`
+  - `options.displayValCommas` does not support floating point numbers;
 
 ## Roadmap
+- Add chart annotation
+- Add support for negative y-values
 
 ## Resources
-* [Color-Hex](www.color-hex.com)
-* [CSS-Tricks](https://css-tricks.com/snippets/css/a-guide-to-flexbox/) - Flexbox Guide
-* [CSS-Tricks](https://css-tricks.com/viewport-sized-typography/) - Viewport Sized Typography
-* [w3schools](https://www.w3schools.com/cssref/css3_pr_transform.asp) - Transform Property
-* [Markdown Live Preview](http://markdownlivepreview.com/)
-* [Awesome-Computer-Vision](https://github.com/jbhuang0604/awesome-computer-vision/blob/master/README.md) - Markdown example
-* [Mozilla Web Docs](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/Reduce) - Array.prototype.reduce()
-* [Mozilla Web Docs](https://developer.mozilla.org/en-US/docs/Web/CSS/outline) - CSS outline property
-* [jQuery Documentation](http://api.jquery.com) - .prepend() .after() .hasClass()
-* [stackoverflow](https://stackoverflow.com/questions/1249531/how-to-get-a-javascript-objects-class#1249554) - Help with typeof, instanceof, obj.constructor
-* [stackoverflow](https://stackoverflow.com/questions/280389/how-do-you-find-out-the-caller-function-in-javascript) - Help debugging
-* [stackoverflow](https://stackoverflow.com/questions/15155778/superscript-in-markdown-github-flavored) - Markdown superscripts
-* [stackoverflow](https://stackoverflow.com/questions/16056591/font-scaling-based-on-width-of-container#19814948) - Font scaling based on container width
+- [Color-Hex](www.color-hex.com)
+- [CSS-Tricks](https://css-tricks.com/snippets/css/a-guide-to-flexbox/) - Flexbox Guide
+- [CSS-Tricks](https://css-tricks.com/viewport-sized-typography/) - Viewport Sized Typography
+- [w3schools](https://www.w3schools.com/cssref/css3_pr_transform.asp) - Transform Property
+- [Markdown Live Preview](http://markdownlivepreview.com/)
+- [Awesome-Computer-Vision](https://github.com/jbhuang0604/awesome-computer-vision/blob/master/README.md) - Markdown example
+- [Mozilla Web Docs](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/Reduce) - Array.prototype.reduce()
+- [Mozilla Web Docs](https://developer.mozilla.org/en-US/docs/Web/CSS/outline) - CSS outline property
+- [jQuery Documentation](http://api.jquery.com) - .prepend() .after() .hasClass()
+- [stackoverflow](https://stackoverflow.com/questions/1249531/how-to-get-a-javascript-objects-class#1249554) - Help with typeof, instanceof, obj.constructor
+- [stackoverflow](https://stackoverflow.com/questions/280389/how-do-you-find-out-the-caller-function-in-javascript) - Help debugging
+- [stackoverflow](https://stackoverflow.com/questions/15155778/superscript-in-markdown-github-flavored) - Markdown superscripts
+- [stackoverflow](https://stackoverflow.com/questions/16056591/font-scaling-based-on-width-of-container#19814948) - Font scaling based on container width
+- [stackoverflow](https://stackoverflow.com/questions/9453421/how-to-round-float-numbers-in-javascript) - Rounding floats in JS
+- [stackoverflow](https://stackoverflow.com/questions/17788990/access-the-css-after-selector-with-jquery) - :after with jQuery
+- [Statistics Canada](http://www.statcan.gc.ca/tables-tableaux/sum-som/l01/cst01/econ46a-eng.htm) - Canada CPI Inflation
+- [CREA](http://creastats.crea.ca/natl/index.html) - Canadian Home Prices
+- [Toronto Raptors](http://www.nba.com/raptors/stats/team) - Team stats
