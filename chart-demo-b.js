@@ -2,16 +2,17 @@ $(document).ready(() => {
     let options1 = {
     width:275,
     height:350,
-    backgroundColor:"#eeeeee",
+    backgroundColor:"#e7e8ee",
     barSpacing:8,
-    barColor:"red",
+    barColor:"#ff6f69",
   };
   let data1 = [4, 7, 8, 12, 9, 6, 5, 2, 1];
 
   let options2 = {
-    width:500,
+    width:425,
     height:350,
-    backgroundColor:"#ffdc73",
+    backgroundColor:"#feffc2",
+    barSpacing:7,
     displayGrid:false,
     displayBarOutlines:true,
     barColor:"#ffbf00",
@@ -30,7 +31,7 @@ $(document).ready(() => {
   let data3 = [{value:125, color:"#3b4274"}, {value:235, color:"#62678f"}, {value:310, color:"#b0b3c7"}, {value:420, color:"#c4c6d5"}];
 
   let options4 = {
-    width:700,
+    width:600,
     height:400,
     backgroundColor:"white",
     title:"Toronto Average Daily High",
@@ -38,7 +39,7 @@ $(document).ready(() => {
     titleColor:"black",
     yAxisLabel:"Temperature",
     yAxisUnits:"\xB0C",
-    barSpacing:18,
+    barSpacing:10,
     barValColor:"white",
     barLabelColor:"blue",
     displayBarOutlines:true,
@@ -59,22 +60,31 @@ $(document).ready(() => {
   ];
 
   let options5 = {
-    width:400,
+    width:450,
     height:400,
-    backgroundColor:"#ffff99",
-    titleFontSize:20,
-    titleColor:"black",
-    barSpacing:15,
-    barColor:"yellow",
+    backgroundColor:"white",
+    titleFontSize:26,
+    title:"Sedan Price Comparison",
+    barSpacing:18,
+    barValPosition:"center",
+    baseFontColor:"#223333",
+    barValColor:"white",
+    yAxisLabel:"Base Price",
+    yAxisUnits:"$ CAD",
+    displayBarOutlines:true,
   };
-  let data5 = [100, 200, 300, 400];
+  let data5 = [
+    {value:51500, label:"BMW 3 Series", color:"#52bf90"},
+    {value:32800, label:"Audi A3", color:"#49ab81"},
+    {value:43950, label:"Lexus ES", color:"#419873"},
+    {value:32800, label:"Mercedes E-Class", color:"#398564"},
+  ];
 
   let options6 = {
-    width:600,
+    width:525,
     height:475,
     title:"Toronto Raptors Stats",
     titleFontSize:30,
-    titleFont:"Graduate",
     titleColor:"black",
     yAxisLabel:"Average Per Game 2017-2018",
     barSpacing:20,
@@ -88,15 +98,14 @@ $(document).ready(() => {
     {value:[17.4, 8.5, 8.4], label:"Lowry"},
     {value:[9.6, 0.8, 4.2], label:"Miles"},
     {value:[8.6, 2.3, 4.1], label:"Wright"},
-    {value:[14.6, 1.2, 18], label:"Valaciunas"},
+    {value:[14.6, 1.2, 18], label:"Valanciunas"},
   ];
 
   let options7 = {
-    width:550,
+    width:525,
     height:475,
     title:"Weekly Bar Sales",
     titleFontSize:35,
-    titleFont:"Playfair Display SC",
     barSpacing:15,
     barColor:"blue",
     barValPosition:"center",
