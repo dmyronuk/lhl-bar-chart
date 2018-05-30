@@ -1,5 +1,5 @@
 $(document).ready(() => {
-    let options1 = {
+  let options1 = {
     width:275,
     height:350,
     backgroundColor:"#e7e8ee",
@@ -28,7 +28,12 @@ $(document).ready(() => {
     barColor:"yellow",
     barValPosition:"top",
   };
-  let data3 = [{value:125, color:"#3b4274"}, {value:235, color:"#62678f"}, {value:310, color:"#b0b3c7"}, {value:420, color:"#c4c6d5"}];
+  let data3 = [
+    {value:125, color:"#3b4274"},
+    {value:235, color:"#62678f"},
+    {value:310, color:"#b0b3c7"},
+    {value:420, color:"#c4c6d5"}
+  ];
 
   let options4 = {
     width:600,
@@ -43,7 +48,7 @@ $(document).ready(() => {
     barValColor:"white",
     barLabelColor:"blue",
     displayBarOutlines:true,
-};
+  };
   let data4 = [
     {value:0, color:"darkblue", label:"Jan"},
     {value:0, color:"darkblue", label:"Feb"},
@@ -126,7 +131,7 @@ $(document).ready(() => {
     {value:[3.7, 1.8, 6.9, 0.7], label:"Fri"},
     {value:[3.1, 2.2, 7.3, 0.9], label:"Sat"},
     {value:[1.5, 1.1, 0.7, 6.5], label:"Sun"},
-  ]
+  ];
 
   drawBarChart(data1, options1, "C1" );
   drawBarChart(data2, options2, "C2" );
@@ -135,6 +140,6 @@ $(document).ready(() => {
   drawBarChart(data5, options5, "C5" );
   drawBarChart(data6, options6, "C6" );
   drawBarChart(data7, options7, "C7" );
-})
+});
 
 

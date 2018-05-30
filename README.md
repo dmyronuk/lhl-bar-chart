@@ -1,14 +1,21 @@
 # Bar Chart Generator
 
 ## About
-This project is a prep assignment for Lighthouse Labs' Web Development bootcamp.  Build html bar graphs!
+This project is a prep assignment for Lighthouse Labs' Web Development bootcamp.
 
 ## Features + Screenshots
+The script can generate both stacked and unstacked bar graphs with the following customizable options:  
+
+- Container dimensions and background color
+- Font family, size and color for title
+- Font color for bar labels, value labels and y-axis label
+- Per-bar color assignment for unstacked graphs
+- Color assignment for each layer of stacked graphs   
+- Optional legend mapping labels onto stacked graph colors
+- Optional gridlines and bar outlines
 
 ![Sample Unstacked Graphs](https://raw.githubusercontent.com/dmyronuk/lhl-bar-chart/master/screenshots/home_cpi_graphs.png)
 ![Sample Stacked Graphs](https://raw.githubusercontent.com/dmyronuk/lhl-bar-chart/master/screenshots/power_sales_graphs.png)
-
-
 
 ## Usage
 
@@ -25,8 +32,8 @@ drawBarChart(data, options, element)
 | :--- | :--- | :--- |
 | *Number* | ```data = [1, 2, 3, 4]``` | Unstacked bar graph with no labels and no per-bar color assignments |
 | *Array* | ```data = [[1, 2, 3], [4, 5, 6], [7, 8, 9]]``` | Stacked bar graph with no labels and no per-bar color assignments |
-| *Object*| ```data = [{value : 10, color : "red", label: "apples"}, {value: 5, color: "yellow", label:"bananas"}]``` | Unstacked bar graph with labels or per-bar color assignments|
-| *Object*| ```data = [{value : [1, 2, 3], color : "black", label: "Monday"}, {value: [4, 5, 6], color: "blue", label:"Tuesday"}]``` | Stacked bar graph with labels or per-bar color assignments |
+| *Object*| ```data = [{value: 10, color: "red", label: "apples"}, {value: 5, color: "yellow", label: "bananas"}]``` | Unstacked bar graph with labels or per-bar color assignments|
+| *Object*| ```data = [{value: [1, 2, 3], color: "black", label: "Monday"}, {value: [4, 5, 6], color: "blue", label:"Tuesday"}]``` | Stacked bar graph with labels or per-bar color assignments |
 
 
 ### options
@@ -39,11 +46,11 @@ drawBarChart(data, options, element)
 | `options.barLabelColor` | *String* | null | Applies only if labels are passed to the function in the `data` argument.  Sets the CSS color property of the label. |
 | `options.barSpacing` | *Number* | 15 | Space in pixels between chart bars |
 | `options.barValColor` | *String* | null | Applies only if `barValPosition !== null`.  Sets the font color of the displayed numeric value of each bar.  If this value is not set then bar values will revert to `options.baseFontColor` |
-| `options.barValPosition` | *String* | null | Toggles whether the numeric value of each bar will be displayed alongside the bar.  If not null, the string specifies the relative position of the value label. |
+| `options.barValPosition` | *String* | null | Toggles whether the numeric value of each bar will be displayed with the bar.  The string specifies the relative position of the label and allowable values are "top", "center" or "bottom". |
 | `options.baseFont` | *String* | Arial | CSS font-family of chart |
 | `options.baseFontColor` | *String* | black | CSS color property of the chart |
 | `options.displayBarOutlines` | *Bool* | false | Toggles CSS outline property of bars |
-| `displayValCommas` | *Bool* | false | Applies only if `barValPosition !== null`.  Formats the displayed bar value so that every third digit is separated by a comma. |
+| `options.displayValCommas` | *Bool* | false | Applies only if `barValPosition !== null`.  Formats the displayed bar value so that every third digit is separated by a comma. |
 | `options.displayGrid` | *Bool* | true | Toggles display of chart grid |
 | `options.height` | *Number* | 500 | Height of the rendered chart in pixels |
 | `options.stackedBarColors` | *Array* | [ ] | Applies only to stacked graphs.  Each element of the array is a string representing a stacked bar color.  The 0<sup>th</sup> element is the bottom color and the last element is the top color.  If this option is not set, colors will be randomly assigned.  Similarly, if not enough colors are supplied, i.e. each stacked bar has 4 data values but only 3 colors are specified, then the 4th color will be randomly assigned. |
@@ -61,10 +68,10 @@ drawBarChart(data, options, element)
 *Type: String* - A string representing the DOM element.id of the container the graph will be rendered to
 
 ## Bugs
-  - Negative y-values are currently unsupported and will render as bars with 0 height
-  - Long bar labels will sometimes overflow their containers depending on the width of the bar
-  - By default, the legend for stacked bar graphs renders outside of the container defined by `options.height, options.width`
-  - If `options.displayValCommas` is set to true and the data set contains floating point numbers, the commas will not be inserted correctly
+- Negative y-values are currently unsupported and will render as bars with 0 height
+- Long bar labels will sometimes overflow their containers depending on the width of the bar
+- By default, the legend for stacked bar graphs renders outside of the container defined by `options.height, options.width`
+- If `options.displayValCommas` is set to true and the data set contains floating point numbers, the commas will not be inserted correctly
 
 ## Roadmap
 - Add chart annotation
