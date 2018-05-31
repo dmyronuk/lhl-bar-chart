@@ -1,8 +1,6 @@
 # Node package files
 node_modules
 package-lock.json
-.eslintrc.js
-.eslintrc.json
 
 # Project notes
 *.txt
