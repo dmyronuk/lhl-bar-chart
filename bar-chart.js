@@ -270,20 +270,21 @@ let appendBarValueLabel = (barValue, parentBar, options) => {
   parentBar.append(barLabelDiv);
 };
 
-let appendBarLabel = (barLabel, parentBar, barLabelColor, graphType) => {
+let appendBarLabel = (barLabel, parentBar, barLabelColor) => {
   let barLabelDiv = $("<div/>").addClass("bar-label");
   let fontSize = getFontSize(parentBar, 0.34, 15);
   barLabelDiv.css("font-size", fontSize);
   barLabelDiv.css("color", barLabelColor);
   barLabelDiv.text(barLabel);
-
-  if(graphType === "stacked"){
-    parentBar.css("position", "relative");
-    barLabelDiv.css("position", "absolute");
-    barLabelDiv.css("width", "100%");
-    barLabelDiv.css("bottom", "-30px");
-  }
   parentBar.append(barLabelDiv);
+};
+
+let setStackedLabelPositions = (parentBar) => {
+  parentBar.css("position", "relative");
+  let labels = parentBar.children(".bar-label");
+  labels.css("position", "absolute");
+  labels.css("width", "100%");
+  labels.css("bottom", "-30px");
 };
 
 //Tried setting outline on parent div but it was applied to child elements like bar-labels & bar-vals, even if they're outside the container
@@ -326,7 +327,6 @@ let appendLegend = (stackedBarLegend, stackedBarColors, containerId) => {
   container.after(legend);
 };
 
-
 //barWidth is fn of data.length, barHeight is fn of max(data)
 let renderData = (data, config, options, element) => {
   let axes = $("#" + element).find(".axes");
@@ -336,7 +336,6 @@ let renderData = (data, config, options, element) => {
   let width = axes.innerWidth();
   let totalSpacerWidth = options.barSpacing * (data.length + 1);
   let barWidth = (width - totalSpacerWidth) / data.length;
-
 
   for(let i = 0; i < data.length; i++){
     //curData will be an array if graph has stacked bars, else curData will be a single value for regular bars
@@ -390,7 +389,10 @@ let renderData = (data, config, options, element) => {
     if(barLabel){
       //If it's a stacked chart, the label's parent should be the bottom block of the stack
       let labelParent = (config.graphType === "stacked") ? $(curBar.children().last()[0]) : curBar;
-      appendBarLabel(barLabel, labelParent, options.barLabelColor, config.graphType);
+      appendBarLabel(barLabel, labelParent, options.barLabelColor);
+      if(config.graphType === "stacked"){
+        setStackedLabelPositions(labelParent);
+      }
     }
     axes.append(curBar);
   }
@@ -398,12 +400,10 @@ let renderData = (data, config, options, element) => {
 
 let drawBarChart = (data, options, element) => {
   /*Options arg is optional.  The assignment specifies the args in this order but I would prefer (data, element, options).
-  When we check if element is undefined we're really checking if options is undefined
-  Create new variable loadedOptions to avoid eslint no-param-reassign error - unsure if this is the best solution */
-  let loadedOptions;
+  When we check if element is undefined we're really checking if options is undefined */
   if(! element){
     element = options;
-    loadedOptions = {};
+    options = {};
   }
 
   //set of configuration options determined by the data passed into the graph
@@ -422,22 +422,22 @@ let drawBarChart = (data, options, element) => {
   }catch(e){
     return e;
   }
-  loadedOptions = loadOptions(config, options, data);
+  options = loadOptions(config, options, data);
 
   //render html elements
-  let containerId = createContainer(element, loadedOptions);
-  createTitle(containerId, loadedOptions);
-  createChartInner(containerId, loadedOptions.yAxisLabel);
-  createTicks(containerId, config, loadedOptions);
+  let containerId = createContainer(element, options);
+  createTitle(containerId, options);
+  createChartInner(containerId, options.yAxisLabel);
+  createTicks(containerId, config, options);
 
-  renderData(data, config, loadedOptions, containerId);
-  if(loadedOptions.yAxisLabel){
-    createYAxisLabel(containerId, loadedOptions.yAxisLabel, loadedOptions.yAxisUnits);
+  renderData(data, config, options, containerId);
+  if(options.yAxisLabel){
+    createYAxisLabel(containerId, options.yAxisLabel, options.yAxisUnits);
   }
   if(options.displayBarOutlines){
     addOutlines(containerId);
   }
-  if(config.graphType === "stacked" && loadedOptions.stackedBarLegend){
-    appendLegend(loadedOptions.stackedBarLegend, loadedOptions.stackedBarColors, containerId);
+  if(config.graphType === "stacked" && options.stackedBarLegend){
+    appendLegend(options.stackedBarLegend, options.stackedBarColors, containerId);
   }
 };
