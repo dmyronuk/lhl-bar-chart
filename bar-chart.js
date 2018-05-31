@@ -252,10 +252,11 @@ let addCommas = (integer) => {
 
 let appendBarValueLabel = (barValue, parentBar, options) => {
   let barLabelDiv = $("<div/>").addClass("bar-value-label");
+  let label = barValue;
   if(options.displayValCommas){
-    barValue = addCommas(barValue);
+    label = addCommas(barValue);
   }
-  barLabelDiv.text(barValue);
+  barLabelDiv.text(label);
 
   barLabelDiv.css("color", options.barValColor);
   if(options.barValPosition === "top"){
