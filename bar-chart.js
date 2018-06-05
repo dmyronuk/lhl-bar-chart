@@ -126,17 +126,11 @@ let getTickInterval = (maxVal, tickDecimalPlaces) => {
   return tickInterval;
 };
 
-let createTicks = (containerId, config, options) => {
+let createTickContainer = (containerId, config, options) => {
   let container = $("#" + containerId);
   let axes = container.find(".axes");
   let axisHeight = axes.innerHeight();
   let axisWidth = axes.innerWidth();
-  //Bars are scaled to 80% axis height so ticks should be scaled by same ratio
-  let maxHeight = axes.innerHeight() * 0.8;
-  let curTickVal = config.tickInterval;
-  let tickHeight = maxHeight * config.tickInterval / config.maxVal;
-  let curHeight = tickHeight;
-
   let margin = parseFloat(axes.css("margin-left").slice(0, -2));
   let tickContainer = $("<div/>").addClass("tick-container");
   // left container will hold the y-axis title - right container will hold the ticks and labels
@@ -151,35 +145,64 @@ let createTicks = (containerId, config, options) => {
   tickContainer.css("width", margin);
   tickContainer.append([tickContainerLeft, tickContainerRight]);
   container.find(".chart-inner").prepend(tickContainer);
+}
 
-  let fontSize = getFontSize(tickContainer, 0.21, 11);
-  if(options.yAxisLabel && config.maxVal > 100){
-    fontSize *= 0.8;
-  }
+let createTicks = (containerId, config, options) => {
+  let container = $("#" + containerId);
+  let tickContainerRight = container.find(".tick-container-right");
+  let axes = container.find(".axes");
+  let axisHeight = axes.innerHeight();
+  let axisWidth = axes.innerWidth();
+  //Bars are scaled to 80% axis height so ticks should be scaled by same ratio
+  let maxHeight = axes.innerHeight() * 0.8;
+  let tickHeight = maxHeight * config.tickInterval / config.maxVal;
+  let curHeight = tickHeight;
+  let curTickVal = 0;
 
   while(curHeight < axisHeight){
-    let tickLabel = $("<div/>").addClass("tick-label");
-    tickLabel.css("bottom", curHeight);
-    tickLabel.css("font-size", fontSize);
-    tickLabel.text(`${curTickVal}`);
-    tickContainerRight.append(tickLabel);
-
     let tick = $("<div/>").addClass("tick");
+    //calculate new tick value, round it to the decimal place specified in options.tickDecimalPlaces, save it as an attr of tick element
+    curTickVal = parseFloat((curTickVal + config.tickInterval).toFixed(options.tickDecimalPlaces));
+    tick.attr("value", curTickVal);
     tick.css("bottom", curHeight);
     tickContainerRight.append(tick);
-
-    if(options.displayGrid){
-      let gridLine = $("<div/>").addClass("grid-line");
-      gridLine.css("bottom", curHeight);
-      gridLine.css("width", axisWidth);
-      gridLine.css("background", "#dddddd");
-      axes.append(gridLine);
-    }
-    //round
-    curTickVal = parseFloat((curTickVal + config.tickInterval).toFixed(options.tickDecimalPlaces));
     curHeight += tickHeight;
   }
+};
+
+let createTickLabels = (containerId, options, config) => {
+  let tickContainer = $("#" +containerId).find(".tick-container");
+  let ticks = tickContainer.find(".tick");
+  let tickContainerRight = tickContainer.find(".tick-container-right");
+
+  let fontSize = getFontSize(tickContainer, 0.21, 11);
+  if(options.yAxisLabel && config.maxVal > 100) fontSize *= 0.8;
   tickContainerRight.find(".tickLabel").css("fontSize", fontSize);
+
+  for(let i = 0; i < ticks.length; i++){
+    let tick = $(ticks[i]);
+    let height = tick.css("bottom");
+    let tickLabel = $("<div/>").addClass("tick-label");
+    tickLabel.css("bottom", height);
+    tickLabel.text(tick.attr("value"));
+    tickContainerRight.append(tickLabel);
+  }
+}
+
+let createGrid = (containerId) => {
+  let axes = $("#" + containerId).find(".axes");
+  let ticks = $("#" + containerId).find(".tick");
+
+  let width = $(containerId).find(".tick-container-right").css("width");
+  for(let i = 0; i < ticks.length; i++){
+    let tick = $(ticks[i]);
+    let gridLine = $("<div/>").addClass("grid-line");
+    let height = tick.css("height");
+    gridLine.css("bottom", height);
+    gridLine.css("width", width);
+    gridLine.css("background", "#dddddd");
+    axes.append(gridLine);
+  }
 };
 
 /* data arg can be either an array of objects (labelled values), an array of subarrays (stacked graph) or an array of ints
@@ -429,15 +452,14 @@ let drawBarChart = (data, options, element) => {
   let containerId = createContainer(element, options);
   createTitle(containerId, options);
   createChartInner(containerId, options.yAxisLabel);
+  createTickContainer(containerId, config, options);
   createTicks(containerId, config, options);
+  createTickLabels(containerId, options, config);
+  if(options.displayGrid) createGrid(containerId);
 
   renderData(data, config, options, containerId);
-  if(options.yAxisLabel){
-    createYAxisLabel(containerId, options.yAxisLabel, options.yAxisUnits);
-  }
-  if(options.displayBarOutlines){
-    addOutlines(containerId);
-  }
+  if(options.yAxisLabel) createYAxisLabel(containerId, options.yAxisLabel, options.yAxisUnits);
+  if(options.displayBarOutlines)addOutlines(containerId);
   if(config.graphType === "stacked" && options.stackedBarLegend){
     appendLegend(options.stackedBarLegend, options.stackedBarColors, containerId);
   }
