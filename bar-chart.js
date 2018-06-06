@@ -181,13 +181,12 @@ let createTicks = (containerId, config, options) => {
 };
 
 let createTickLabels = (containerId, options, config) => {
-  let tickContainer = $("#" +containerId).find(".tick-container");
+  let tickContainer = $("#" + containerId).find(".tick-container");
   let ticks = tickContainer.find(".tick");
   let tickContainerRight = tickContainer.find(".tick-container-right");
 
   let fontSize = getFontSize(tickContainer, 0.21, 11);
   if(options.yAxisLabel && config.maxVal > 100) fontSize *= 0.8;
-  tickContainerRight.find(".tickLabel").css("fontSize", fontSize);
 
   for(let i = 0; i < ticks.length; i++){
     let tick = $(ticks[i]);
@@ -197,6 +196,7 @@ let createTickLabels = (containerId, options, config) => {
     tickLabel.text(tick.attr("value"));
     tickContainerRight.append(tickLabel);
   }
+  tickContainerRight.find(".tick-label").css("font-size", fontSize);
 }
 
 let createGrid = (containerId) => {
@@ -424,6 +424,12 @@ let renderStackedBars = (data, config, options, element) => {
 };
 
 let drawBarChart = (data, options, element) => {
+  //reassign args if options is not passed to function
+  if (! element){
+    element = options;
+    options = {};
+  }
+
   //set of configuration options determined by the data passed into the graph
   let config = {};
   try{
