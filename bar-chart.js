@@ -55,6 +55,16 @@ let loadOptions = (config, options, data) => {
   return options;
 };
 
+/*data arg can be an array of number or an array of object - if elems are numbers, we want to convert them to objects so we can
+use the same functions on both types of inputs*/
+let convertDataToObjects = (data, barColor) => {
+  let convertedData = [];
+  data.forEach((elem) => {
+    convertedData.push({value: elem});
+  });
+  return convertedData;
+};
+
 let createContainer = (element, options) => {
   let container = $("<div></div").addClass("chart-container");
   container.css("width", options.width);
@@ -192,13 +202,13 @@ let createTickLabels = (containerId, options, config) => {
 let createGrid = (containerId) => {
   let axes = $("#" + containerId).find(".axes");
   let ticks = $("#" + containerId).find(".tick");
+  let width = axes.width();
 
-  let width = $(containerId).find(".tick-container-right").css("width");
   for(let i = 0; i < ticks.length; i++){
     let tick = $(ticks[i]);
     let gridLine = $("<div/>").addClass("grid-line");
-    let height = tick.css("height");
-    gridLine.css("bottom", height);
+    let bottom = tick.css("bottom");
+    gridLine.css("bottom", bottom);
     gridLine.css("width", width);
     gridLine.css("background", "#dddddd");
     axes.append(gridLine);
@@ -222,6 +232,15 @@ let getGraphType = (data, dataClass) => {
   let firstElem = (dataClass === "Object") ? data[0].value : data[0];
   return (firstElem.constructor.name === "Array") ? "stacked" : "bar";
 };
+
+let getTotalSpacerWidth = (data, barSpacing) => {
+  return barSpacing * (data.length + 1);
+}
+
+let getBarWidth = (data, totalSpacerWidth, containerId) => {
+  let axes = $("#" + containerId).find(".axes");
+  return (axes.width() - totalSpacerWidth) / data.length;
+}
 
 let getMaxVal = (data, dataClass, graphType) => {
   if(dataClass === "Object"){
@@ -252,10 +271,6 @@ let createBar = (barHeight, barWidth, options) => {
   bar.css("width", barWidth);
   bar.css("height", barHeight);
   return bar;
-};
-
-let setBarColor = (bar, barColor) => {
-  bar.css("background", barColor);
 };
 
 let addCommas = (integer) => {
@@ -332,7 +347,7 @@ let createYAxisLabel = (containerId, yAxisLabel, yAxisUnits) => {
 
 //Legend for stacked bar graph colors
 //Legend renders outside of the container defined by options.height, options.width - may change in future
-let appendLegend = (stackedBarLegend, stackedBarColors, containerId) => {
+let createLegend = (stackedBarLegend, stackedBarColors, containerId) => {
   let container = $("#" + containerId);
   let legend = $("<div/>").addClass("legend");
   legend.css("width", container.width());
@@ -352,84 +367,63 @@ let appendLegend = (stackedBarLegend, stackedBarColors, containerId) => {
 };
 
 //barWidth is fn of data.length, barHeight is fn of max(data)
-let renderData = (data, config, options, element) => {
+let renderUnstackedBars = (data, config, options, element) => {
   let axes = $("#" + element).find(".axes");
-
-  //We don't want the tallest bar going all the way to the top of the y axis so scale y-vals down to 80% of container
-  let height = axes.innerHeight() * 0.8;
-  let width = axes.innerWidth();
-  let totalSpacerWidth = options.barSpacing * (data.length + 1);
-  let barWidth = (width - totalSpacerWidth) / data.length;
+  //Max bar height is 80% of container
+  let maxHeight = axes.innerHeight() * 0.8;
 
   for(let i = 0; i < data.length; i++){
-    //curData will be an array if graph has stacked bars, else curData will be a single value for regular bars
     let curData = data[i];
-    let curBar;
-    let barLabel;
-    //need local var that may be overridden later by bar obj.color property
-    let barColor = options.barColor;
-    (config.dataClass === "Object" && curData.label) ? barLabel = curData.label : barLabel = null;
-
-    if(config.graphType === "bar"){
-      // curData should be either a Number or an Object
-      let yVal;
-      if(config.dataClass === "Object"){
-        yVal = curData.value;
-        if(curData.color){
-          barColor = curData.color;
-        }
-      }else{
-        yVal = curData;
-      }
-      let barHeight = height * yVal / config.maxVal;
-      curBar = createBar(barHeight, barWidth, options);
-      setBarColor(curBar, barColor);
-      if(options.barValPosition){
-        appendBarValueLabel(yVal, curBar, options);
-      }
-    }else if(config.graphType === "stacked"){
-      //container for stacked values
-      curBar = $("<div/>").addClass("stacked-bar");
-      let stackLength = (config.dataClass === "Object") ? curData.value.length : curData.length;
-
-      for(let j = 0; j < stackLength; j++){
-        let yVal;
-        // curData is either an Array or an Object - if Object, it's 'value' property is an array of values
-        (config.dataClass === "Object") ? yVal = curData.value[j] : yVal = curData[j];
-        let barHeight = height * yVal / config.maxVal;
-
-        let color = options.stackedBarColors[j];
-        let curStackedBar = createBar(barHeight, barWidth, options);
-        setBarColor(curStackedBar, color);
-        if(options.barValPosition){
-          appendBarValueLabel(yVal, curStackedBar, options);
-        }
-        curBar.prepend(curStackedBar);
-      }
-    }
-
-    //since createBar fn doesn't know whether bars are stacked or not, we need to set this css value outside the fn body
+    let barHeight = maxHeight * curData.value / config.maxVal;
+    let curBar = createBar(barHeight, config.barWidth, options);
+    let barColor = (curData.color) ? curData.color : options.barColor;
+    curBar.css("background", barColor);
     curBar.css("display", "inline-block");
-    if(barLabel){
-      //If it's a stacked chart, the label's parent should be the bottom block of the stack
-      let labelParent = (config.graphType === "stacked") ? $(curBar.children().last()[0]) : curBar;
-      appendBarLabel(barLabel, labelParent, options.barLabelColor);
-      if(config.graphType === "stacked"){
-        setStackedLabelPositions(labelParent);
-      }
+
+    if(options.barValPosition){
+      appendBarValueLabel(curData.value, curBar, options);
     }
+    if(curData.label){
+      appendBarLabel(curData.label, curBar, options.barLabelColor);
+    }
+    axes.append(curBar);
+  }
+}
+
+let renderStackedBars = (data, config, options, element) => {
+  let axes = $("#" + element).find(".axes");
+  let maxHeight = axes.innerHeight() * 0.8;
+
+  //render each stacked bar
+  for(let i = 0; i < data.length; i++){
+    let curData = data[i];
+    let stackLength = curData.value.length;
+    let curBar = $("<div/>").addClass("stacked-bar");
+
+    //render each sub-bar in the stack
+    for(let j = 0; j < stackLength; j++){
+      let barHeight = maxHeight * curData.value[j] / config.maxVal;
+      let curStackedBar = createBar(barHeight, config.barWidth, options);
+      let barColor = options.stackedBarColors[j];
+      curStackedBar.css("background", barColor);
+      if(options.barValPosition){
+        appendBarValueLabel(curData.value[j], curBar, options);
+      }
+      curBar.prepend(curStackedBar);
+    }
+
+    //add data labels
+    if(curData.label){
+      let labelParent = $(curBar.children().last()[0])
+      appendBarLabel(curData.label, labelParent, options.barLabelColor);
+      setStackedLabelPositions(labelParent);
+    }
+    curBar.css("display", "inline-block");
     axes.append(curBar);
   }
 };
 
 let drawBarChart = (data, options, element) => {
-  /*Options arg is optional.  The assignment specifies the args in this order but I would prefer (data, element, options).
-  When we check if element is undefined we're really checking if options is undefined */
-  if(! element){
-    element = options;
-    options = {};
-  }
-
   //set of configuration options determined by the data passed into the graph
   let config = {};
   try{
@@ -439,14 +433,14 @@ let drawBarChart = (data, options, element) => {
   }
 
   config.graphType = getGraphType(data, config.dataClass);
-  //substitutes default options for undefined params
   config.maxVal = getMaxVal(data, config.dataClass, config.graphType);
+  options = loadOptions(config, options, data);
+
   try{
     config.tickInterval = getTickInterval(config.maxVal, options.tickDecimalPlaces);
   }catch(e){
-    return e;
+    console.log(e);
   }
-  options = loadOptions(config, options, data);
 
   //render html elements
   let containerId = createContainer(element, options);
@@ -457,10 +451,25 @@ let drawBarChart = (data, options, element) => {
   createTickLabels(containerId, options, config);
   if(options.displayGrid) createGrid(containerId);
 
-  renderData(data, config, options, containerId);
+  config.totalSpacerWidth = getTotalSpacerWidth(data, options.barSpacing);
+  config.barWidth = getBarWidth(data, config.totalSpacerWidth, containerId);
+
+  let dataObjectArray;
+  if(config.dataClass === "Number" || config.dataClass === "Array"){
+    dataObjectArray = convertDataToObjects(data, options.barColor);
+  }else{
+    dataObjectArray = data;
+  }
+
+  if(config.graphType === "stacked"){
+    renderStackedBars(dataObjectArray, config, options, containerId);
+  }else{
+    renderUnstackedBars(dataObjectArray, config, options, containerId);
+  }
+
   if(options.yAxisLabel) createYAxisLabel(containerId, options.yAxisLabel, options.yAxisUnits);
   if(options.displayBarOutlines)addOutlines(containerId);
   if(config.graphType === "stacked" && options.stackedBarLegend){
-    appendLegend(options.stackedBarLegend, options.stackedBarColors, containerId);
+    createLegend(options.stackedBarLegend, options.stackedBarColors, containerId);
   }
 };
