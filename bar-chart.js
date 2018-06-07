@@ -155,7 +155,7 @@ let createTickContainer = (containerId, config, options) => {
   tickContainer.css("width", margin);
   tickContainer.append([tickContainerLeft, tickContainerRight]);
   container.find(".chart-inner").prepend(tickContainer);
-}
+};
 
 let createTicks = (containerId, config, options) => {
   let container = $("#" + containerId);
@@ -197,7 +197,7 @@ let createTickLabels = (containerId, options, config) => {
     tickContainerRight.append(tickLabel);
   }
   tickContainerRight.find(".tick-label").css("font-size", fontSize);
-}
+};
 
 let createGrid = (containerId) => {
   let axes = $("#" + containerId).find(".axes");
@@ -235,7 +235,7 @@ let getGraphType = (data, dataClass) => {
 
 let getTotalSpacerWidth = (data, barSpacing) => {
   return barSpacing * (data.length + 1);
-}
+};
 
 let getBarWidth = (data, totalSpacerWidth, containerId) => {
   let axes = $("#" + containerId).find(".axes");
@@ -372,6 +372,7 @@ let renderUnstackedBars = (data, config, options, element) => {
   //Max bar height is 80% of container
   let maxHeight = axes.innerHeight() * 0.8;
 
+  //render each unstacked bar
   for(let i = 0; i < data.length; i++){
     let curData = data[i];
     let barHeight = maxHeight * curData.value / config.maxVal;
@@ -388,7 +389,7 @@ let renderUnstackedBars = (data, config, options, element) => {
     }
     axes.append(curBar);
   }
-}
+};
 
 let renderStackedBars = (data, config, options, element) => {
   let axes = $("#" + element).find(".axes");
@@ -407,7 +408,8 @@ let renderStackedBars = (data, config, options, element) => {
       let barColor = options.stackedBarColors[j];
       curStackedBar.css("background", barColor);
       if(options.barValPosition){
-        appendBarValueLabel(curData.value[j], curBar, options);
+        console.log("val pos: ", options.barValPosition)
+        appendBarValueLabel(curData.value[j], curStackedBar, options);
       }
       curBar.prepend(curStackedBar);
     }
